@@ -3,7 +3,7 @@
 
 </script>
 
-<h1>Веда - свежие сведения обо всём!</h1>
+<h1 class="title">Веда - свежие сведения обо всём!</h1>
 
 <nav>
   <a href="/">Home</a>
@@ -17,8 +17,8 @@
 <hr>
 
 <style>
-  h1 {
+  /* h1 {
     color: green;
     font-weight: bold;
-  }
+  } */
 </style>
