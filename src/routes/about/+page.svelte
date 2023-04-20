@@ -1,23 +1,29 @@
-<h1>О проекте</h1>
+<h3 class="title is-3">О проекте</h3>
 
-<div class="columns is-multiline is-mobile">
-  <div class="column">
-    First column
+
+<form class="box">
+  <div class="field">
+    <label class="label">Email</label>
+    <div class="control">
+      <input class="input" type="email" placeholder="e.g. alex@example.com">
+    </div>
   </div>
-  <div class="column ">
-    Second column
+
+  <div class="field">
+    <label class="label">Password</label>
+    <div class="control">
+      <input class="input" type="password" placeholder="********">
+    </div>
   </div>
-  <div class="column">
-    Third column
-  </div>
-  <div class="column">
-    Fourth column
-  </div>
-</div>
+
+  <button class="button is-primary">Sign in</button>
+</form>
+
+
 
 <style>
-  h1 {
+  /* h1 {
     color: darkviolet;
     font-weight: bold;
-  }
+  } */
 </style>
