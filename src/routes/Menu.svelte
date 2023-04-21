@@ -29,6 +29,8 @@ function toggleMenu() {
       <a class="navbar-item" href="/">Home</a>
       <a class="navbar-item" href="/about">О программе</a>
       <a class="navbar-item" href="/users/login">Вход</a>
+      <a class="navbar-item" href="/bu.html">bu.html</a>
+      <a class="navbar-item" href="/phone/book">Телефоны</a>
       
       <div class="navbar-item has-dropdown is-hoverable">
         <a class="navbar-link" href="/">SVG</a>
