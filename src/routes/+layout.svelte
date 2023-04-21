@@ -10,9 +10,13 @@
 </script>
 
 <Header />
+<div class="container">
+
 
 <hr color="red">
 <slot />
 <hr color="red">
+
+</div>
 
 <Footer />

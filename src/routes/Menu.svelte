@@ -9,8 +9,6 @@ function toggleMenu() {
 </script>
 
 
-
-
 <nav class="navbar is-transparent">
   <div class="navbar-brand">
     <a class="navbar-item" href="/">
@@ -30,21 +28,17 @@ function toggleMenu() {
     <div class="navbar-start" on:click={toggleMenu}>
       <a class="navbar-item" href="/">Home</a>
       <a class="navbar-item" href="/about">О программе</a>
+      <a class="navbar-item" href="/users/login">Вход</a>
+      
       <div class="navbar-item has-dropdown is-hoverable">
-        <a class="navbar-link" href="#">Menu</a>
+        <a class="navbar-link" href="/">SVG</a>
         <div class="navbar-dropdown is-boxed">
-          <a class="navbar-item" href="/users/login">
-            Вход
+          <a class="navbar-item" href="/violin.svg">
+            Violin
           </a>
-          <a class="navbar-item" href="#">
-            Modifiers
-          </a>
-          <hr class="navbar-divider">
-          <a class="navbar-item" href="#">
-            Elements
-          </a>
-          <a class="navbar-item is-active" href="#">
-            Components
+          <!-- <hr class="navbar-divider"> -->
+          <a class="navbar-item" href="/alarm.svg">
+            Alarm
           </a>
         </div>
       </div>
