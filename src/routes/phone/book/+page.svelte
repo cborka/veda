@@ -2,50 +2,7 @@
   export let data;
 
   let variant = 11;
-
- 
-  let json_data = JSON.stringify({
-    "lines": [
-      {
-        "id": "1",
-        "sd": "АСУ",
-        "fio": "Иванов",
-        "tel": "123"
-      },
-      {
-        "id": "2",
-        "sd": "Гараж",
-        "fio": "Петров",
-        "tel": "456"
-      },
-      {
-        "id": "3",
-        "sd": "Цех 1",
-        "fio": "Сидоров",
-        "tel": "789"
-      }
-    ]
-  });
-//  let data2 = get_datajs(json_data);
   
-  function get_datajs(js = '') {
-    let obj = JSON.parse(js);
-    let n = obj?.lines?.length;
-
-    let ret = '';
-    for(let i=0; i<n; i++) {
-      ret += `
-      <tr>
-        <th>${obj?.lines[i]?.id}</th>
-        <td>${obj?.lines[i]?.sd}</td>
-        <td>${obj?.lines[i]?.fio}</td>
-        <td>${obj?.lines[i]?.tel}</td>
-      </tr>
-      `;
-    }
-    return ret;
-  }
-
   function get_data(data = ['']) {
     let lines = '';
     for(let i=0; i<data.length; i++) {
@@ -58,6 +15,16 @@
         <td>${tel[1]}</td>
         <td>${tel[2]}</td>
         <td>${tel[3]}</td>
+        <td > 
+
+  <button id="${tel[0]}" class="ic" title="Изменить">
+    <span >fff
+      <i class="mdi mdi-pencil-outline"></i>
+    </span>
+  </button>
+
+
+        </td>
       </tr>
       `;
     }
@@ -70,27 +37,61 @@
 
 </script>
 
+<!-- 
+<div class="buttons has-addons ">
+  <button id="${tel[0]}"class="button is-primary is-inverted" title="Изменить">
+    <span class="icon">
+      <i class="mdi mdi-pencil-outline"></i>
+    </span>
+  </button>
+  <button id="${tel[0]}"class="button is-danger is-inverted" title="Удалить">
+    <span class="icon">
+      <i class="mdi mdi-delete-outline"></i>
+    </span>
+  </button>
+</div>
+ -->
+
 <!-- <div>{JSON.stringify(data)}</div> -->
 
 <h2 class="title is-2 has-text-info">Телефонная книга</h2>
 <h4 class="subtitle is-4 has-text-info">Вариант {variant}</h4>
 
 <div class="table-container">
-  <table class="table">
+  <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+    <col class="col1" />
+    <col class="col2" />
+    <col class="col2" />
+    <col class="col1" />
+    <col class="coll" />
     <thead>
       <tr>
-        <th><abbr title="Id number">Id</abbr></th>
+        <th>Id</th>
         <th>Подразделение</th>
-        <th><abbr title="Фамилия Имя Отчество">ФИО</abbr></th>
-        <th><abbr title="Телефонный номер">Номер</abbr></th>
+        <th title="Фамилия Имя Отчество">ФИО</th>
+        <th title="Телефонный номер">Номер</th>
+        <th>
+          <button class="button is-primary is-inverted" title="Добавить новый номер">
+            <span class="icon">
+              <i class="mdi mdi-account-plus-outline"></i>
+            </span>
+          </button>
+        </th>
       </tr>
     </thead>
     <tfoot>
       <tr>
-        <th><abbr title="Id number">Id</abbr></th>
-        <th>Подразделение</th>
-        <th><abbr title="Фамилия Имя Отчество">ФИО</abbr></th>
-        <th><abbr title="Телефонный номер">Номер</abbr></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th>
+          <button class="ic" title="Добавить новый номер">
+            <span class="icon">
+              <i class="mdi mdi-account-plus-outline"></i>
+            </span>
+          </button>
+        </th>
       </tr>
     </tfoot>
     <tbody>
@@ -107,3 +108,30 @@
     
   </table>
 </div>
+
+<style>
+  .ic {
+    color:blueviolet;
+  }
+
+  th {
+    /* table-layout: auto; */
+    vertical-align: middle;
+
+    
+  }
+  
+
+  .col1 {
+        width: 10px;
+        max-width: 20px;
+  }
+  .col2 {
+        width: 150px;
+  }
+  .coll {
+        width: 15px;
+        padding: 0;
+        margin: 0;
+  }
+</style>

@@ -1,0 +1,16 @@
+.ic {
+  color:rgb(43, 226, 43);
+  border:none;
+  padding: 0;
+}
+
+th {
+  vertical-align: middle;
+}
+
+td {
+  vertical-align: middle;
+}
+tr {
+  vertical-align: middle;
+}

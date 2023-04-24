@@ -8,8 +8,9 @@ function toggleMenu() {
 
 </script>
 
+<div class="container">
 
-<nav class="navbar is-transparent">
+<nav class="navbar is-transparent  is-fixed-top">
   <div class="navbar-brand">
     <a class="navbar-item" href="/">
       <img src="/favicon.png" alt="Веда" width="28" height="28">
@@ -62,3 +63,4 @@ function toggleMenu() {
     </div>
   </div>
 </nav>
+</div>
