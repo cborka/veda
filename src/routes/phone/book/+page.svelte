@@ -1,36 +1,43 @@
 <script>
+// @ts-nocheck
+
   export let data;
 
   let variant = 11;
   
-  function get_data(data = ['']) {
-    let lines = '';
-    for(let i=0; i<data.length; i++) {
-      let tel = data[i].split('|');
-      //alert(tel.length);
-      if(tel.length >= 4)
-      lines += `
-      <tr>
-        <th>${tel[0]}</th>
-        <td>${tel[1]}</td>
-        <td>${tel[2]}</td>
-        <td>${tel[3]}</td>
-        <td > 
+  // Формирование тела таблицы - телефонного справочника
+  // function get_data(data = ['']) {
+  //   let lines = '';
+  //   for(let i=0; i<data.length; i++) {
+  //     let tel = data[i].split('|');
+  //     if(tel.length >= 4)
+  //     lines += `
+  //     <tr>
+  //       <th>${tel[0]}</th>
+  //       <td>${tel[1]}</td>
+  //       <td>${tel[2]}</td>
+  //       <td>${tel[3]}</td>
+  //       <td class=""> 
+  //         <button id="${tel[0]}" class=" green ic" title="Изменить" onclick="newNumber(${tel[0]})"> &#9997;</button>
+  //         <button id="${tel[0]}" class=" red ic" title="Удалить"><b>&#9587;</b></button>
+  //       </td>
+  //     </tr>
+  //     `;
+  //   }
+  //   return lines;
+  //}
+  //let data2 = get_data(data.tels);
 
-  <button id="${tel[0]}" class="ic" title="Изменить">
-    <span >fff
-      <i class="mdi mdi-pencil-outline"></i>
-    </span>
-  </button>
+function newNumber() {
 
+  let b = this.id;
+  location.href = "/phone/edit/"+b;
+//  alert('new '+data.data[b].fio+' '+this.id);
 
-        </td>
-      </tr>
-      `;
-    }
-    return lines;
-  }
-  let data2 = get_data(data.tels);
+// тут сделать запрос к БД за данными указанной записи и вернуть данные для заполнения редактируемой формы
+
+}
+
 
 
 
@@ -71,10 +78,8 @@
         <th title="Фамилия Имя Отчество">ФИО</th>
         <th title="Телефонный номер">Номер</th>
         <th>
-          <button class="button is-primary is-inverted" title="Добавить новый номер">
-            <span class="icon">
-              <i class="mdi mdi-account-plus-outline"></i>
-            </span>
+          <button class="ic" title="Добавить новый номер">
+            <b>╋</b>
           </button>
         </th>
       </tr>
@@ -86,10 +91,11 @@
         <th></th>
         <th></th>
         <th>
+          <button class="button is-primary is-inverted is-small" title="Изменить">
+          </button>
+
           <button class="ic" title="Добавить новый номер">
-            <span class="icon">
-              <i class="mdi mdi-account-plus-outline"></i>
-            </span>
+
           </button>
         </th>
       </tr>
@@ -101,37 +107,41 @@
         <td>Фамилия Имя Отчество</td>
         <td>Номер</td>
       </tr> -->
-      {@html data2}
+      <!-- {@html data2} -->
+
+      {#each data.data as tel } 
+      <!-- { id, sd, fio, tel }} -->
+      <!-- {#each data.data as  tel } -->
+
+      <tr>
+        <th>{tel.id}</th>
+        <td>{tel.sd}</td>
+        <td>{tel.fio}</td>
+        <td>{tel.tel}</td>
+        <td id="x" class=""> 
+          <button tag="{tel.id}" id="{tel.idx}" name="btnname" class=" green ic" title="Изменить" on:click={newNumber}> &#9997;</button>
+          <button id="" class=" red ic" title="Удалить"><b>&#9587;</b></button>
+        </td>
+      </tr>
+    {/each}  
+
     </tbody>
-
-
-    
   </table>
 </div>
 
+
+
+
+
 <style>
-  .ic {
-    color:blueviolet;
-  }
-
-  th {
-    /* table-layout: auto; */
-    vertical-align: middle;
-
-    
-  }
-  
 
   .col1 {
         width: 10px;
-        max-width: 20px;
   }
   .col2 {
         width: 150px;
   }
   .coll {
-        width: 15px;
-        padding: 0;
-        margin: 0;
+        width: 5px;
   }
 </style>

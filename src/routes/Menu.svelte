@@ -31,7 +31,7 @@ function toggleMenu() {
       <a class="navbar-item" href="/about">О программе</a>
       <a class="navbar-item" href="/users/login">Вход</a>
       <a class="navbar-item" href="/bu.html">bu.html</a>
-      <a class="navbar-item" href="/phone/book">Телефоны</a>
+      <a class="navbar-item" href="/phone/book">☎ Телефоны</a>
       
       <div class="navbar-item has-dropdown is-hoverable">
         <a class="navbar-link" href="/">SVG</a>
@@ -48,17 +48,8 @@ function toggleMenu() {
     </div>
 
     <div class="navbar-end">
-      <div class="navbar-item">
-        <div class="field is-grouped">
-          <p class="control">
-            <a class="button is-primary" href="https://github.com/jgthms/bulma/releases/download/0.9.4/bulma-0.9.4.zip">
-              <span class="icon">
-                <i class="fas fa-download"></i>
-              </span>
-              <span>Download</span>
-            </a>
-          </p>
-        </div>
+      <div class="navbar-item red">
+        <b>♕</b>
       </div>
     </div>
   </div>

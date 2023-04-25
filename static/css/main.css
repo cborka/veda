@@ -1,7 +1,19 @@
+
+header{
+	background:snow;
+
+}
+
 .ic {
-  color:rgb(43, 226, 43);
-  border:none;
-  padding: 0;
+  /* color:rgb(43, 226, 43); */
+  border: none;
+  /* padding: 0;
+  margin: 0; */
+  background: white;
+}
+
+button:hover {
+  background:gainsboro;
 }
 
 th {
@@ -13,4 +25,17 @@ td {
 }
 tr {
   vertical-align: middle;
+}
+
+.darkgreen {
+  color:darkgreen;
+}
+.green {
+  color:green;
+}
+.darkred {
+  color:darkred;
+}
+.red {
+  color:red;
 }

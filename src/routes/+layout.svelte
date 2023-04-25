@@ -14,9 +14,11 @@
 <Header />
 <div class="container">
 
-<hr color="red">
+<!-- <hr color="red"> -->
+❄
 <slot />
-<hr color="red">
+<!-- <hr color="red"> -->
+❄
 
 </div>
 
