@@ -28,21 +28,37 @@
   //}
   //let data2 = get_data(data.tels);
 
+let fio = '';
+
 function newNumber() {
 
   let b = this.id;
-  location.href = "/phone/edit/"+b;
+  //location.href = "/phone/edit/"+b;
+  fio = data.data[b].fio;
 //  alert('new '+data.data[b].fio+' '+this.id);
+  //alert('new '+fio+' '+this.id);
+
+  openmodal();
 
 // тут сделать запрос к БД за данными указанной записи и вернуть данные для заполнения редактируемой формы
 
 }
 
+let modal = "modal";
+function openmodal() {
+  modal = "";
+}
 
-
+function closemodal() {
+  modal = "modal";
+}
 
 
 </script>
+
+<button class="js-modal-trigger" data-target="modal-js-example" on:click={openmodal} >
+  Open JS example modal
+</button>
 
 <!-- 
 <div class="buttons has-addons ">
@@ -91,11 +107,7 @@ function newNumber() {
         <th></th>
         <th></th>
         <th>
-          <button class="button is-primary is-inverted is-small" title="Изменить">
-          </button>
-
-          <button class="ic" title="Добавить новый номер">
-
+          <button class="ic" title="Добавить новый номер">+
           </button>
         </th>
       </tr>
@@ -130,11 +142,61 @@ function newNumber() {
 </div>
 
 
+<div id="modal-js-example" class="{modal}">
+  <div class="modal-background" on:click={closemodal}></div>
+
+  <div class="modal-content">
+    <div class="box">
+      <p>Modal JS example</p>
+
+      <form class="control">
+
+      <div class="field">
+        <label class="label">Name
+        <div class="control">
+          <input class="input" type="text" placeholder="Text input">
+        </div>
+      </label>
+      </div>
+      
+      <div class="field control">
+        <div class="">
+          <label class="label">ФИО
+            <input class="input is-success" type="text" placeholder="Text input" value="{fio}">
+          </label>
+        </div>
+        <p class="help is-success">This username is available</p>
+    </div>
+
+    </form>
+
+
+
+
+
+
+      <!-- Your content -->
+      <button class="button" on:click={closemodal}>Close</button>
+    </div>
+  </div>
+
+  <button class="modal-close is-large" aria-label="close" on:click={closemodal}>Close</button>
+
+</div>
+
 
 
 
 <style>
 
+.modal-background {
+  background-color:lightgray;
+  opacity: 0.4;
+}
+/* .modal-content {
+  background-color:blanchedalmond;
+  
+} */
   .col1 {
         width: 10px;
   }
