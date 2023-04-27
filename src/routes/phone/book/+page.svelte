@@ -28,13 +28,18 @@
   //}
   //let data2 = get_data(data.tels);
 
+let id = 0;
+let sd = '';
 let fio = '';
+let tel = '';
 
 function newNumber() {
-
   let b = this.id;
   //location.href = "/phone/edit/"+b;
+  id = data.data[b].id;
+  sd = data.data[b].sd;
   fio = data.data[b].fio;
+  tel = data.data[b].tel;
 //  alert('new '+data.data[b].fio+' '+this.id);
   //alert('new '+fio+' '+this.id);
 
@@ -54,7 +59,12 @@ function closemodal() {
 }
 
 
+//let mb = document.getElementById("modal-box");
+//alert(mb.class);
+
 </script>
+
+
 
 <button class="js-modal-trigger" data-target="modal-js-example" on:click={openmodal} >
   Open JS example modal
@@ -142,35 +152,58 @@ function closemodal() {
 </div>
 
 
-<div id="modal-js-example" class="{modal}">
-  <div class="modal-background" on:click={closemodal}></div>
+<div id="modal-js-example" class="{modal}" >
+  
+  <!-- <div class="modal-background" ></div> -->
+  <div class="modal-background" on:click={closemodal} on:keyup={null}></div>
 
-  <div class="modal-content">
-    <div class="box">
+  <div class="modal-content modal-position ">
+    
+    <div id="modal-box" class="box">
+      ww
       <p>Modal JS example</p>
 
-      <form class="control">
+      <form class="">
 
       <div class="field">
-        <label class="label">Name
-        <div class="control">
-          <input class="input" type="text" placeholder="Text input">
-        </div>
+        <label class="label">Id
+          <div class="control">
+            <input class="input" type="number" placeholder=""  value="{id}">
+          </div>
       </label>
+      </div>
+      
+      <div class="field">
+        <div class="control">
+          <label class="label">Подразделение
+            <input class="input is-success" type="text" placeholder="Бухгалтерия" value="{sd}">
+          </label>
+        </div>
       </div>
       
       <div class="field control">
         <div class="">
           <label class="label">ФИО
-            <input class="input is-success" type="text" placeholder="Text input" value="{fio}">
+            <input class="input is-success" type="text" placeholder="Иванов И.И." value="{fio}">
           </label>
         </div>
-        <p class="help is-success">This username is available</p>
-    </div>
+        <!-- <p class="help is-success">Хорошее имя!</p> -->
+      </div>
+      
+      <div class="field control">
+        <div class="">
+          <label class="label">Телефон
+            <input class="input is-success" type="text" placeholder="1-11-111" value="{tel}">
+          </label>
+        </div>
+        <!-- <p class="help is-success">Хорошее имя!</p> -->
+      </div>
 
     </form>
 
-
+<br />
+<br />
+<br />
 
 
 
@@ -180,9 +213,10 @@ function closemodal() {
     </div>
   </div>
 
-  <button class="modal-close is-large" aria-label="close" on:click={closemodal}>Close</button>
+  <!-- <button class="modal-close is-large" aria-label="close" on:click={closemodal}>Close</button> -->
 
 </div>
+
 
 
 
@@ -190,9 +224,22 @@ function closemodal() {
 <style>
 
 .modal-background {
+
   background-color:lightgray;
   opacity: 0.4;
+ 
+  /* style="position: relative" */
 }
+.modal-position {
+  position: absolute;
+  top: 0%;
+  bottom: 0%;
+  left: 0%;
+  right: 0%;
+  margin: 0 auto;
+
+}
+
 /* .modal-content {
   background-color:blanchedalmond;
   

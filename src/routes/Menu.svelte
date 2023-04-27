@@ -13,7 +13,7 @@ function toggleMenu() {
 <nav class="navbar is-transparent  is-fixed-top">
   <div class="navbar-brand">
     <a class="navbar-item" href="/">
-      <img src="/favicon.png" alt="Веда" width="28" height="28">
+      <img src="/favicon.ico" alt="Веда" width="28" height="28">
     </a>
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <div class="navbar-burger" data-target="navbarMenu" on:click={toggleMenu}>

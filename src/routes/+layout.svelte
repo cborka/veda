@@ -10,16 +10,27 @@
 
 </script>
 
-<Menu></Menu>
-<Header />
-<div class="container">
 
+<Menu></Menu>
+
+<Header />
+
+<main class="container layout-container" >
 <!-- <hr color="red"> -->
 ❄
 <slot />
 <!-- <hr color="red"> -->
 ❄
-
-</div>
+</main>
 
 <Footer />
+
+<style>
+
+.layout-container {
+  /* height: 100%; */
+  min-height: 66vh;
+}
+
+
+</style>
