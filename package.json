@@ -5,6 +5,7 @@
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build",
+		"build-env": "node -r dotenv/config build",
 		"preview": "vite preview",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json --watch",
@@ -21,7 +22,6 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@mdi/font": "^7.2.96",
 		"dotenv": "^16.0.3",
 		"pg": "^8.10.0"
 	}

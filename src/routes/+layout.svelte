@@ -1,35 +1,35 @@
 <script>
-  import { page } from '$app/stores';
+  // Подключаем переменные из .env
+  import * as dotenv from 'dotenv';  
+  dotenv.config();
 
-  //import {client} from '../db';
+  import { page } from '$app/stores';
 
   import Menu from './Menu.svelte'; 
 	import Header from './Header.svelte';
 	import Footer from './Footer.svelte';
 
-
+  // console.log('VITE_HELLO =' + process.env.VITE_HELLO);
+  // console.log(import.meta.env);
 </script>
 
 
 <Menu></Menu>
+<!-- <Header /> -->
 
-<Header />
+<main class="container block" >
 
-<main class="container layout-container" >
-<!-- <hr color="red"> -->
-❄
 <slot />
-<!-- <hr color="red"> -->
-❄
+<!-- ❄ -->
 </main>
 
 <Footer />
 
 <style>
 
-.layout-container {
+main {
   /* height: 100%; */
-  min-height: 66vh;
+  min-height: 75vh;
 }
 
 

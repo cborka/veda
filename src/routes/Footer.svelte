@@ -1,4 +1,4 @@
-<footer class=" block boottom section">
+<footer class=" container section block">
   <div class="content has-text-centered">
     <!-- <hr> -->
     <p>Документация здесь <a href="https://kit.svelte.dev">kit.svelte.dev</a>.</p>
@@ -7,7 +7,7 @@
 </footer>
 
 <style>
-  .boottom {
+  footer {
     background-color:gainsboro;
     
     

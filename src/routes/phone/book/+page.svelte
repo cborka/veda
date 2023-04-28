@@ -66,9 +66,9 @@ function closemodal() {
 
 
 
-<button class="js-modal-trigger" data-target="modal-js-example" on:click={openmodal} >
+<!-- <button class="js-modal-trigger" data-target="modal-js-example" on:click={openmodal} >
   Open JS example modal
-</button>
+</button> -->
 
 <!-- 
 <div class="buttons has-addons ">
@@ -87,8 +87,8 @@ function closemodal() {
 
 <!-- <div>{JSON.stringify(data)}</div> -->
 
-<h2 class="title is-2 has-text-info">Телефонная книга</h2>
-<h4 class="subtitle is-4 has-text-info">Вариант {variant}</h4>
+<div class="title is-4 has-text-info">Телефонная книга</div>
+<!-- <h4 class="subtitle is-6 has-text-info">Вариант {variant}</h4> -->
 
 <div class="table-container">
   <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
@@ -158,8 +158,8 @@ function closemodal() {
   <div class="modal-background" on:click={closemodal} on:keyup={null}></div>
 
   <div class="modal-content modal-position ">
-    
-    <div id="modal-box" class="box">
+    <br>
+    <div id="modal-box" class="box block">
       ww
       <p>Modal JS example</p>
 
@@ -201,9 +201,9 @@ function closemodal() {
 
     </form>
 
+
 <br />
-<br />
-<br />
+
 
 
 
