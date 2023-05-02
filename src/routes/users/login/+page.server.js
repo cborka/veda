@@ -11,7 +11,9 @@ import { json } from '@sveltejs/kit';
 
 export const actions = {
   default: async ({ cookies, request }) => {
+
 		const data = await request.formData();
+    console.log('data = ' + JSON.stringify(data));
     let login = data.get('login');
     let password = data.get('password');
     

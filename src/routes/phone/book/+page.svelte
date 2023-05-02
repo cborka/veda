@@ -2,8 +2,12 @@
 // @ts-nocheck
 
   export let data;
+  export let form;
+
+  import { enhance } from '$app/forms';
 
   let variant = 11;
+  let saved = '...';
   
   // Формирование тела таблицы - телефонного справочника
   // function get_data(data = ['']) {
@@ -34,12 +38,28 @@ let fio = '';
 let tel = '';
 
 function newNumber() {
+  id = 0;
+  sd = '';
+  fio = '';
+  tel = '';
+
+  openmodal();
+}
+
+function editNumber() {
+  //alert(JSON.stringify(data));
+  //alert(JSON.stringify(b));
+  //alert(JSON.stringify(this.id));
   let b = this.id;
+  if(b == '')
+  alert(b)
   //location.href = "/phone/edit/"+b;
+if(b != '') {
   id = data.data[b].id;
   sd = data.data[b].sd;
   fio = data.data[b].fio;
   tel = data.data[b].tel;
+}
 //  alert('new '+data.data[b].fio+' '+this.id);
   //alert('new '+fio+' '+this.id);
 
@@ -61,12 +81,15 @@ function closemodal() {
 
 //let mb = document.getElementById("modal-box");
 //alert(mb.class);
-
+//console.log('xxxnewNumber');
 </script>
 
 
+<!-- <button on:click={openmodal} >
+  openmodal
+</button>
 
-<!-- <button class="js-modal-trigger" data-target="modal-js-example" on:click={openmodal} >
+<button class="js-modal-trigger" data-target="modal-js-example" on:click={openmodal} >
   Open JS example modal
 </button> -->
 
@@ -104,7 +127,7 @@ function closemodal() {
         <th title="Фамилия Имя Отчество">ФИО</th>
         <th title="Телефонный номер">Номер</th>
         <th>
-          <button class="ic" title="Добавить новый номер">
+          <button class="ic green" title="Добавить новый номер" on:click={newNumber}>
             <b>╋</b>
           </button>
         </th>
@@ -117,7 +140,7 @@ function closemodal() {
         <th></th>
         <th></th>
         <th>
-          <button class="ic" title="Добавить новый номер">+
+          <button class="ic green" title="Добавить новый номер">+
           </button>
         </th>
       </tr>
@@ -131,7 +154,7 @@ function closemodal() {
       </tr> -->
       <!-- {@html data2} -->
 
-      {#each data.data as tel } 
+      {#each data.data as tel, idx } 
       <!-- { id, sd, fio, tel }} -->
       <!-- {#each data.data as  tel } -->
 
@@ -141,7 +164,7 @@ function closemodal() {
         <td>{tel.fio}</td>
         <td>{tel.tel}</td>
         <td id="x" class=""> 
-          <button tag="{tel.id}" id="{tel.idx}" name="btnname" class=" green ic" title="Изменить" on:click={newNumber}> &#9997;</button>
+          <button tag="{id}" id="{idx}" name="btnname" class=" green ic" title="Изменить!" on:click={editNumber}> &#9997;</button>
           <button id="" class=" red ic" title="Удалить"><b>&#9587;</b></button>
         </td>
       </tr>
@@ -151,6 +174,7 @@ function closemodal() {
   </table>
 </div>
 
+<!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
 
 <div id="modal-js-example" class="{modal}" >
   
@@ -163,12 +187,12 @@ function closemodal() {
       ww
       <p>Modal JS example</p>
 
-      <form class="">
+      <form class="" method="POST" action="?/save" use:enhance>
 
       <div class="field">
         <label class="label">Id
           <div class="control">
-            <input class="input" type="number" placeholder=""  value="{id}">
+            <input name="id" class="input" type="number" placeholder=""  value="{id}" readonly>
           </div>
       </label>
       </div>
@@ -176,7 +200,7 @@ function closemodal() {
       <div class="field">
         <div class="control">
           <label class="label">Подразделение
-            <input class="input is-success" type="text" placeholder="Бухгалтерия" value="{sd}">
+            <input name="sd" class="input is-success" type="text" placeholder="Бухгалтерия" value="{sd}">
           </label>
         </div>
       </div>
@@ -184,7 +208,7 @@ function closemodal() {
       <div class="field control">
         <div class="">
           <label class="label">ФИО
-            <input class="input is-success" type="text" placeholder="Иванов И.И." value="{fio}">
+            <input name="fio" class="input is-success" type="text" placeholder="Иванов И.И." value="{fio}">
           </label>
         </div>
         <!-- <p class="help is-success">Хорошее имя!</p> -->
@@ -193,20 +217,17 @@ function closemodal() {
       <div class="field control">
         <div class="">
           <label class="label">Телефон
-            <input class="input is-success" type="text" placeholder="1-11-111" value="{tel}">
+            <input name="tel" class="input is-success" type="text" placeholder="1-11-111" value="{tel}">
           </label>
         </div>
         <!-- <p class="help is-success">Хорошее имя!</p> -->
       </div>
 
+      <button on:click={closemodal}>Сохранить</button>
+
     </form>
 
-
 <br />
-
-
-
-
 
       <!-- Your content -->
       <button class="button" on:click={closemodal}>Close</button>
@@ -217,9 +238,15 @@ function closemodal() {
 
 </div>
 
-
-
-
+{#if form?.error}
+  <p class="error">{form.error}</p>
+{/if}
+{#if form?.success}
+    <p>Success, {form?.success}</p>
+{/if}
+{#if !form?.success}
+    <p>Not Success, {form?.success}</p>
+{/if}
 
 <style>
 

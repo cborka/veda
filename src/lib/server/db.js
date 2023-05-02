@@ -1,16 +1,29 @@
 import pkg from 'pg';
 const { Client } = pkg;
 
-// console.log('db_password = ' + process.env.DB_USER);
+import {
+  DB_HOST,
+  DB_NAME,
+  DB_USER,
+  DB_PASSWORD
+	} from '$env/static/private';
 
-//export const db = 'DB123';
- 
+
+ console.log('DB_USER = ' + DB_USER);
+ //console.log('DB_USER = ' + process.env.DB_USER);
+
 export const client = new Client({
-  host: process.env.DB_HOST,
-  database: process.env.DB_NAME,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
+  host: DB_HOST,
+  database: DB_NAME,
+  user: DB_USER,
+  password: DB_PASSWORD,
 });
+// export const client = new Client({
+//   host: process.env.DB_HOST,
+//   database: process.env.DB_NAME,
+//   user: process.env.DB_USER,
+//   password: process.env.DB_PASSWORD,
+// });
 
  client
    .connect()

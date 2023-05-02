@@ -1,4 +1,9 @@
+<script>
+  
+</script>
+
 <h3 class="title is-3">О проекте</h3>
+
 
 <style>
   h3 {
