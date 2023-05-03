@@ -51,18 +51,21 @@ function editNumber() {
   //alert(JSON.stringify(b));
   //alert(JSON.stringify(this.id));
   let b = this.id;
-  if(b == '')
-  alert(b)
+  //if(b == '')
+  //alert(b)
   //location.href = "/phone/edit/"+b;
 if(b != '') {
-  id = data.data[b].id;
-  sd = data.data[b].sd;
-  fio = data.data[b].fio;
-  tel = data.data[b].tel;
+  // Переменная не рендерится если не меняется.
+  // Так как при отсылке данных форма обнуляется, 
+  // то если повторно открываем форму с теми же данными, то они не перечитываются и поля оказываются пустыми
+  id=0;   id = data.data[b].id;
+  sd='';  sd = data.data[b].sd;
+  fio=''; fio = data.data[b].fio;
+  tel=''; tel = data.data[b].tel;
 }
 //  alert('new '+data.data[b].fio+' '+this.id);
   //alert('new '+fio+' '+this.id);
-
+  //alert('['+id+sd+fio+tel+']')
   openmodal();
 
 // тут сделать запрос к БД за данными указанной записи и вернуть данные для заполнения редактируемой формы
@@ -71,10 +74,12 @@ if(b != '') {
 
 let modal = "modal";
 function openmodal() {
+  //alert('open['+id+sd+fio+tel+']');
   modal = "";
 }
 
 function closemodal() {
+  //alert('close['+id+sd+fio+tel+']')
   modal = "modal";
 }
 
@@ -224,6 +229,8 @@ function closemodal() {
       </div>
 
       <button on:click={closemodal}>Сохранить</button>
+      <input type="submit" value="Ok">
+      <input type="button" name="cancel" value="Отмена" on:click={closemodal}>
 
     </form>
 
@@ -242,11 +249,12 @@ function closemodal() {
   <p class="error">{form.error}</p>
 {/if}
 {#if form?.success}
-    <p>Success, {form?.success}</p>
+    <p class="success">Данные обновлены.</p>
 {/if}
-{#if !form?.success}
-    <p>Not Success, {form?.success}</p>
+{#if form && (!form?.success)}
+    <p class="error">Ошибка: {form?.err}.</p>
 {/if}
+
 
 <style>
 

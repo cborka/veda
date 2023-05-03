@@ -1,4 +1,5 @@
-<footer class=" container section block">
+
+<footer class=" container section block  notification is-info is-light">
   <div class="content has-text-centered">
     <!-- <hr> -->
     <p>Документация здесь <a href="https://kit.svelte.dev">kit.svelte.dev</a>.</p>
@@ -8,7 +9,8 @@
 
 <style>
   footer {
-    background-color:gainsboro;
+    /* background-color:gainsboro; */
+    color:gainsboro; 
     
     
     /* position:absolute;

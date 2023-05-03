@@ -5,6 +5,13 @@
 
 } */
 
+.error {
+  color:red;
+}
+.success {
+  color:green;
+}
+
 .ic {
   /* color:rgb(43, 226, 43); */
   border: none;

@@ -3,18 +3,29 @@
   // import Menu from './Menu.svelte'; 
 </script>
 
-<header class="header block">
+<header class=" container section block notification is-primary is-light">
+  <div class="content has-text-centered">
 
-<!-- <h1 class="title">Веда - свежие сведения обо всём!</h1> -->
-<!-- <h2 class="title is-6 ">Веда - свежие сведения обо всём!</h2> -->
+
+<!-- <h1 class="subtitle">Веда - свежие сведения обо всём!</h1> -->
+
+<div class="title is-3 ">Веда - свежие сведения обо всём!</div>
+
 <!-- <Menu></Menu> -->
 
+</div>
 </header>
 
 
 <style>
   header {
     background-color:aliceblue;
+    /* padding: 20px; */
+
+
+    /* height: 30px; */
   }
-  /* h2 {color:blueviolet} */
+  /* .blueviolet {
+    color:blueviolet
+  } */
 </style>
