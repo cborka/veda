@@ -3,7 +3,8 @@
 </script>
 
 <h1>{$page.status}: {$page?.error?.message}</h1>
-<p>{JSON.stringify($page)}</p>
+
+<!-- <p>{JSON.stringify($page)}</p> -->
 
 <style>
   h1 {
