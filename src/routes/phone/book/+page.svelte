@@ -10,6 +10,10 @@ let variant = 11;
 let saved = '...';
 let x = 0;
 
+let sortorder = 'asc';
+let sortby = 'id';
+let showdeleted = "false";
+
 
 let id = 0;
 let sd = '';
@@ -18,43 +22,69 @@ let tel = '';
 
 // Добавить строку (новый номер)
 function newNumber() {
-  id = 0;
-  sd = '';
-  fio = '';
-  tel = '';
+ 
+  // id = 0;
+  // sd = '';
+  // fio = '';
+  // tel = '';
+
+  editForm.id.value = id = 0;
+  editForm.sd.value = sd = '';
+  editForm.fio.value = fio = '';
+  editForm.tel.value = tel = '';
 
   openmodal();
 }
 
 // Изменить / удалить строку (телефонный номер)
 function editNumber() {
-
   let b = this.id;
   //location.href = "/phone/edit/"+b;
   if(b != '') {
+
     // Переменная не рендерится если не меняется.
     // Так как при отсылке данных форма обнуляется, 
     // то если повторно открываем форму с теми же данными, то они не перечитываются и поля оказываются пустыми
-    id=0;   id = data.data[b].id;
-    sd='';  sd = data.data[b].sd;
-    fio=''; fio = data.data[b].fio;
-    tel=''; tel = data.data[b].tel;
+    // Можно было использовать bind если бы поля инициализровались просто переменными, а не выражениями на случай ошибок.
+    //
+    // Что-то тут не так, оптимизатор должен убрать первые присваивания 
+    // id=0;   id = data.data[b].id;
+    // sd='';  sd = data.data[b].sd;
+    // fio=''; fio = data.data[b].fio;
+    // tel=''; tel = data.data[b].tel;
+  
+    editForm.id.value = id = data.data[b].id;
+    editForm.sd.value = sd = data.data[b].sd;
+    editForm.fio.value = fio = data.data[b].fio;
+    editForm.tel.value = tel = data.data[b].tel;
   }
   //alert('['+id+sd+fio+tel+']')
 
-  if(this.name == 'btnedit') {
-    openmodal();  // изменение данных в строке
-  } else {
-    openmodal2(); // удаление строки
-  } 
+  openmodal();  // изменение данных в строке
 }
+
+// Изменить / удалить строку (телефонный номер)
+function deleteNumber() {
+  let b = +this.id;
+  if(b >= 0) {
+    deleteForm.id.value = id = data.data[b].id;
+    sd = data.data[b].sd;
+    fio = data.data[b].fio;
+    tel = data.data[b].tel;
+  }
+  //alert('['+id+sd+fio+tel+']')
+
+  openmodal2(); // удаление строки
+}
+
 
 let modal = "modal";
 function openmodal() {
-  if (form?.success) { delete form?.success; }
+
   modal = "";
 }
 function closemodal() {
+  form = null;
   modal = "modal";
 }
 
@@ -64,6 +94,7 @@ function openmodal2() {
   modal2 = "";
 }
 function closemodal2() {
+  form = null;
   modal2 = "modal";
 }
 
@@ -72,7 +103,7 @@ function openmodal3() {
   modal3 = "";
 }
 function closemodal3() {
-  if (form?.missing) { delete form?.missing; }
+  form = null;
   modal3 = "modal";
 }
 
@@ -81,17 +112,39 @@ function closemodal3() {
 //alert(mb.class);
 //console.log('xxxnewNumber');
 
-function sortby() {
+function refreshOrder() {
   let col_name = this.id.slice(3);
-  alert(col_name);
-//  alert(JSON.stringify(this.title));
+  //alert(col_name);
 
-
-
-
+  if (refreshForm.sortby.value == col_name) {
+    if (refreshForm.sortorder.value == 'asc') {
+      refreshForm.sortorder.value = sortorder ='desc';
+    } else {
+      refreshForm.sortorder.value = sortorder ='asc';
+    }
+    sortby = col_name; // на всякий случай
+  } else {
+    refreshForm.sortby.value = sortby = col_name;
+    refreshForm.sortorder.value = sortorder ='asc';
+  }
+  //refreshDeleted()
+  refreshForm.submit();
 }
 
 
+function refreshDeleted() {
+  //alert(showdeleted + ', '+ refreshForm.showdeleted.checked + ', ' + refreshForm.showdeleted.value);
+
+  if (refreshForm.showdeleted.value == "true") {
+    refreshForm.showdeleted.value = showdeleted = "false";
+  } else {
+    refreshForm.showdeleted.value = showdeleted = "true";
+  }
+
+  //alert(showdeleted + ', '+ refreshForm.showdeleted.checked + ', ' + refreshForm.showdeleted.value);
+
+  refreshForm.submit();
+}
 
 </script>
 
@@ -107,10 +160,13 @@ function sortby() {
     <col class="coll" />
     <thead>
       <tr>
-        <th id="th_id" on:click={sortby}>Id</th>
-        <th id="th_sd" title='sort' on:click={sortby}>Подразделение</th>
-        <th id="th_fio" title="Фамилия Имя Отчество" on:click={sortby}>ФИО</th>
-        <th id="th_tel" title="Телефонный номер" on:click={sortby}>Номер</th> 
+        <th id="th_id" on:click={refreshOrder}>Id</th>
+        <th id="th_sd" title=''><p>Подразделение
+          <button id="sr_sd" on:click={refreshOrder}>сорт</button></p> 
+          <input class="filter" name="filter_sd" type="text" value="zxcv" visible="false">
+        </th>
+        <th id="th_fio" title="Фамилия Имя Отчество" on:click={refreshOrder}>ФИО</th>
+        <th id="th_tel" title="Телефонный номер" on:click={refreshOrder}>Номер</th> 
         <th>
           <button class="ic green" title="Добавить новый номер" on:click={newNumber}>
             <b>╋</b>
@@ -123,9 +179,12 @@ function sortby() {
         <th></th>
         <th></th>
         <th></th>
-        <th></th>
         <th>
-          <button class="ic green" title="Добавить новый номер" on:click={openmodal3}>Параметры
+          <button class="ic green" title="" on:click={refreshDeleted}>Показать/спрятать удалённые
+          </button>
+        </th>
+        <th>
+          <button class="ic green" title="" on:click={openmodal3}>Параметры
           </button>
         </th>
       </tr>
@@ -141,10 +200,9 @@ function sortby() {
         <td>{tel.fio}</td>
         <td>{tel.tel}</td>
         <td class=""> 
-          <!-- name="btnedit" по имени кнопки опредеяем, редактируем строку или удаляем -->
-          <button id="{idx}" name="btnedit" class="green ic" title="Изменить!" on:click={editNumber}> &#9997;</button>  
+          <button id="{idx}" class="green ic" title="Изменить!" on:click={editNumber}> &#9997;</button>  
           <!-- ✍ ╳ -->
-          <button id="{idx}" class="red ic" title="Удалить" on:click={editNumber}><b>&#9587;</b></button>
+          <button id="{idx}" class="red ic" title="Удалить" on:click={deleteNumber}><b>&#9587;</b></button>
         </td>
       </tr>
     {/each}  
@@ -167,12 +225,12 @@ function sortby() {
       <p class="title is-5">Изменение записи</p>
 
       <!-- <form class="" method="POST" action="?/save" use:enhance> -->
-      <form class="" method="POST" action="?/save">
+      <form name="editForm" class="" method="POST" action="?/save">
 
       <div class="field">
         <label class="label">Id
           <div class="control">
-            <input name="id" class="input" type="number" placeholder=""  value="{id}" readonly>
+            <input name="id" class="input" type="number" placeholder=""  value="{form?.id ?? id}" readonly>
           </div>
       </label>
       </div>
@@ -180,7 +238,7 @@ function sortby() {
       <div class="field">
         <div class="control">
           <label class="label">Подразделение
-            <input name="sd" class="input is-success" type="text" placeholder="Бухгалтерия" value="{sd}">
+            <input name="sd" class="input is-success" type="text" placeholder="Бухгалтерия" value="{form?.sd ?? sd}">
           </label>
         </div>
       </div>
@@ -188,7 +246,7 @@ function sortby() {
       <div class="field control">
         <div class="">
           <label class="label">ФИО
-            <input name="fio" class="input is-success" type="text" placeholder="Иванов И.И." value="{fio}">
+            <input name="fio" class="input is-success" type="text" placeholder="Иванов И.И." value="{form?.fio ?? fio}">
           </label>
         </div>
         <p class="help is-success">Хорошее имя!</p>
@@ -197,7 +255,7 @@ function sortby() {
       <div class="field control">
         <div class="">
           <label class="label">Телефон
-            <input name="tel" class="input is-success" type="text" placeholder="11-11-11" value="{tel}">
+            <input name="tel" class="input is-success" type="text" placeholder="11-11-11" required value="{form?.tel ?? tel}">
           </label>
         </div>
         <!-- <p class="help is-success">Хорошее имя!</p> -->
@@ -213,6 +271,10 @@ function sortby() {
       </div>
 
     </form>
+    
+    {#if (form?.fail1) && (form?.err)}
+        <p class="error">Ошибка: {form?.err}. {openmodal() ?? ''}</p>
+    {/if}
       <!-- Your content -->
       <!-- <button class="button" on:click={closemodal}>Close</button> -->
     </div>
@@ -233,21 +295,21 @@ function sortby() {
     <br>
     <div id="modal-box2" class="box block">
 
-      <p class="title is-5">Удалить строку???<br>{id}|{sd}|{fio}|{tel}</p>
+      <p class="title is-5">Удалить строку {form?.id ?? id}??? ({sd}|{fio}|{tel})</p>
 
-      <form class="" method="POST" action="?/delete">
+      <form name="deleteForm" class="" method="POST" action="?/delete">
 
         <div class="field">
           <label class="label">
             <div class="control">
-              <input name="id" class="xinput" type="number" value="{id}" visible="false" hidden readonly>
+              <input name="id"  type="number" value="{form?.id ?? id}"  hidden readonly>
             </div>
         </label>
         </div>
         
         <div class="field is-grouped is-grouped-centered">
           <p class="control">
-            <button type="submit" class="button is-danger is-light" on:click={closemodal2}>Удалить</button>
+            <button type="submit" class="button is-danger is-light">Удалить</button>
           </p>
           <p class="control">
             <button type="button" class="button is-warning is-light" on:click={closemodal2}>Отмена</button>
@@ -255,6 +317,9 @@ function sortby() {
         </div>
 
       </form>
+      {#if (form?.fail2) && (form?.err)}
+        <p class="error">Ошибка: {form?.err}. {openmodal2() ?? ''}</p>
+      {/if}
     </div>
   </div>
 
@@ -275,12 +340,18 @@ function sortby() {
 
       <p>Обновить данные???</p>
 
-      <form class="" method="POST" action="?/refresh">
+      <form name="refreshForm" class="" method="POST" action="?/refresh">
+
+
+        <input name="sortby"  type="text" value="{form?.sortby ?? sortby}" xhidden readonly>
+        <input name="sortorder" type="text" value="{form?.sortorder ?? sortorder}" xhidden readonly>
+        <input name="showdeleted" type="text" value="{form?.showdeleted ?? showdeleted}" xhidden readonly>
+        
 
       <div class="field">
         <label class="label">
           <div class="control">
-            <input name="x" class="xinput" type="number" value="{x}" >
+            <input name="x" class="xinput" type="number" value="{form?.x ?? x}" hidden>
           </div>
       </label>
       </div>
@@ -309,16 +380,16 @@ function sortby() {
 </div>
 
 
-
-{#if form?.error}
+<p class="green">{JSON.stringify(form)}</p>
+<!-- {#if form?.error}
   <p class="error">{form.error}</p>
-{/if}
+{/if} -->
 {#if form?.success}
     <p class="success">{form?.msg}</p>
 {/if}
-{#if form && (!form?.success) && (form?.err)}
+<!-- {#if form && (!form?.success) && (form?.err)}
     <p class="error">Ошибка: {form?.err}.</p>
-{/if}
+{/if} -->
 
 
 <style>

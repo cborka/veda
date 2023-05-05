@@ -1,23 +1,34 @@
+// @ts-nocheck
 import { readFileSync, writeFileSync } from 'node:fs';
 import { error } from '@sveltejs/kit';
 import { fail, redirect } from '@sveltejs/kit';
 
-let show_deleted = false;
-
-// @ts-ignore
 import {client} from '$lib/server/db.js';
+
+let sortorder = 'asc';
+let sortby = 'id';
+let showdeleted = "false";
 
 // Загрузка из DB
 export async function load() {
 
   let sql = ''
+  let where = 'WHERE ';
+  let orderby = 'ORDER BY ';
 
-  if (show_deleted) {
-    sql = 'SELECT id, sd, fio, tel FROM phones WHERE id < $1 ORDER BY id'
+  if (showdeleted == "true") {
+    where += ' id < $1 ';
   } else {
-    sql = 'SELECT id, sd, fio, tel FROM phones WHERE id > $1 ORDER BY id'
+    where += ' id > $1 ';
   }
 
+  if (sortby == '') {sortby += 'id'; } 
+  if (sortorder == '') {sortorder += 'asc'; } 
+  orderby += sortby + ' ' + sortorder;
+  
+  sql = `SELECT id, sd, fio, tel FROM phones ${where} ${orderby}`;
+  
+  console.log('sql = ' + sql);
 
   try {
     let x = await client.query(sql, [0]);
@@ -54,21 +65,6 @@ export async function load() {
 }
 
 
-// export const actions = {
-//   default: async ({ cookies, request }) => {
-//     console.log('cookies = ' + JSON.stringify(cookies));
-//     console.log('request = ' + JSON.stringify(request));
-    
-//     const data = await request.formData();
-//     console.log('data = ' + JSON.stringify(data));
-
-//     let text = data.get('text');
-//     console.log(text);
-//     //let password = data.get('password');
-
-//       return { success: true };
-//   }
-// };
 export const actions = {
   save: async ({ cookies, request }) => {
 
@@ -82,7 +78,7 @@ export const actions = {
 
       let text = '';
       let values = [];
-      if(Number(id) > 0) {
+      if(Number(id) != 0) {
         text = 'UPDATE public.phones SET sd=$1, fio=$2, tel=$3 WHERE id=$4 RETURNING *';
         values = [sd, fio, tel, id];
       } else {
@@ -90,17 +86,14 @@ export const actions = {
         values = [sd, fio, tel];
       }
       
-      // async/await
       try {
         const res = await client.query(text, values)
         console.log(res.rows[0]);
         // { id: 2, sd: 'Бухгалтерия', fio: 'Сидорова А.Н.', tel: '11-77-11' }
       } catch (err) {
-        // @ts-ignore
         console.log(err.message);
         // console.log(err.stack);
-        // @ts-ignore
-        return { success: false, err: err?.message  };
+        return fail(400, { id, sd, fio, tel, fail1: true, err: err?.message });
       }
 
     //   const user = await db.getUser(email);
@@ -109,6 +102,7 @@ export const actions = {
 
       return { success: true, msg: 'Данные обновлены...' };
   },
+
   // Мягкое удаление строки, меняю знак id на отрицательный
   delete: async ({ cookies, request }) => {
 
@@ -124,19 +118,24 @@ export const actions = {
       const res = await client.query(text, values)
       //console.log(res.rows[0]);   
     } catch (err) {
-      // @ts-ignore
       console.log(err.message);
-      // @ts-ignore
-      return { success: false, err: err?.message  };
+      return fail(400, { id, fail2: true, err: err?.message });
     }
 
-    return { success: true, msg: 'Строка удлена...'  };
+    return { success: true, msg: 'Строка удалена...'  };
   },
+
   refresh: async ({ cookies, request }) => {
 
     const data = await request.formData();
     let x = data.get('x');
-    
+
+    sortorder = data.get('sortorder');
+    sortby = data.get('sortby');
+    showdeleted = data.get('showdeleted');;
+    //load();
+    return {x, sortby, sortorder, showdeleted, success: true, msg: 'Данные обновлены...'  };
+
     if (Number(x) == 0) {
 			return fail(400, { msg: 'Ye t vft', missing: true });
 		} else if (Number(x) < 3) {
