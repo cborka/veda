@@ -20,7 +20,9 @@ let sd = '';
 let fio = '';
 let tel = '';
 
-// Добавить строку (новый номер)
+//
+// Добавить строку (новый телефонный номер)
+//
 function newNumber() {
  
   // id = 0;
@@ -36,7 +38,9 @@ function newNumber() {
   openmodal();
 }
 
-// Изменить / удалить строку (телефонный номер)
+//
+// Изменить строку (телефонный номер)
+//
 function editNumber() {
   let b = this.id;
   //location.href = "/phone/edit/"+b;
@@ -46,12 +50,6 @@ function editNumber() {
     // Так как при отсылке данных форма обнуляется, 
     // то если повторно открываем форму с теми же данными, то они не перечитываются и поля оказываются пустыми
     // Можно было использовать bind если бы поля инициализровались просто переменными, а не выражениями на случай ошибок.
-    //
-    // Что-то тут не так, оптимизатор должен убрать первые присваивания 
-    // id=0;   id = data.data[b].id;
-    // sd='';  sd = data.data[b].sd;
-    // fio=''; fio = data.data[b].fio;
-    // tel=''; tel = data.data[b].tel;
   
     editForm.id.value = id = data.data[b].id;
     editForm.sd.value = sd = data.data[b].sd;
@@ -63,7 +61,9 @@ function editNumber() {
   openmodal();  // изменение данных в строке
 }
 
-// Изменить / удалить строку (телефонный номер)
+//
+// Удалить строку (телефонный номер)
+//
 function deleteNumber() {
   let b = +this.id;
   if(b >= 0) {
@@ -78,8 +78,13 @@ function deleteNumber() {
 }
 
 
-let modal = "modal";
-function openmodal() {
+//
+// Открытие / закрытие модальных окон (форм) 
+//  производится изменением соответствующего css-класса, 
+//  который меняется простым изменением значения переменной (с помощью svelte)
+//
+let modal = "modal";    // форма корректировки данных
+function openmodal() { 
 
   modal = "";
 }
@@ -88,7 +93,7 @@ function closemodal() {
   modal = "modal";
 }
 
-let modal2 = "modal";
+let modal2 = "modal";   // форма подтверждения удаления текущей строки
 function openmodal2() {
   if (form?.success) { delete form?.success; }
   modal2 = "";
@@ -98,7 +103,7 @@ function closemodal2() {
   modal2 = "modal";
 }
 
-let modal3 = "modal";
+let modal3 = "modal";   // форма параметров обновления страницы
 function openmodal3() {
   modal3 = "";
 }
@@ -112,6 +117,10 @@ function closemodal3() {
 //alert(mb.class);
 //console.log('xxxnewNumber');
 
+
+//
+// Изменить порядок сортировки таблицы
+//
 function refreshOrder() {
   let col_name = this.id.slice(3);
   //alert(col_name);
@@ -131,7 +140,10 @@ function refreshOrder() {
   refreshForm.submit();
 }
 
-
+//
+// Показать / спрятать удалённые
+//  удаление производится сменой знака id на отрицательный, фактически просто прячем запись от показа
+//
 function refreshDeleted() {
   //alert(showdeleted + ', '+ refreshForm.showdeleted.checked + ', ' + refreshForm.showdeleted.value);
 
@@ -144,6 +156,15 @@ function refreshDeleted() {
   //alert(showdeleted + ', '+ refreshForm.showdeleted.checked + ', ' + refreshForm.showdeleted.value);
 
   refreshForm.submit();
+}
+
+
+function filterK(event) {
+  if (event.key == 'Enter')
+    alert(JSON.stringify(event?.target.id) + ', ' + event?.type);
+
+
+//  refreshForm.submit();    
 }
 
 </script>
@@ -161,9 +182,9 @@ function refreshDeleted() {
     <thead>
       <tr>
         <th id="th_id" on:click={refreshOrder}>Id</th>
-        <th id="th_sd" title=''><p>Подразделение
-          <button id="sr_sd" on:click={refreshOrder}>сорт</button></p> 
-          <input class="filter" name="filter_sd" type="text" value="zxcv" visible="false">
+        <th id="th_sd" title=''>
+          <p>Подразделение <button id="sr_sd" on:click={refreshOrder}>сорт</button></p> 
+            <input class="filter" id="zx123" name="filter_sd" type="text" placeholder="фильтр" value="" on:keyup={filterK}>
         </th>
         <th id="th_fio" title="Фамилия Имя Отчество" on:click={refreshOrder}>ФИО</th>
         <th id="th_tel" title="Телефонный номер" on:click={refreshOrder}>Номер</th> 

@@ -5,11 +5,14 @@ import { fail, redirect } from '@sveltejs/kit';
 
 import {client} from '$lib/server/db.js';
 
+// Параметры загрузки страницы
 let sortorder = 'asc';
 let sortby = 'id';
 let showdeleted = "false";
 
+//
 // Загрузка из DB
+//
 export async function load() {
 
   let sql = ''
@@ -17,9 +20,9 @@ export async function load() {
   let orderby = 'ORDER BY ';
 
   if (showdeleted == "true") {
-    where += ' id < $1 ';
+    where += ' id < 0 ';
   } else {
-    where += ' id > $1 ';
+    where += ' id > 0 ';
   }
 
   if (sortby == '') {sortby += 'id'; } 
@@ -31,7 +34,7 @@ export async function load() {
   console.log('sql = ' + sql);
 
   try {
-    let x = await client.query(sql, [0]);
+    let x = await client.query(sql, []);
 
     // console.log('PROMISE CLIENT = ' + JSON.stringify( x.rows[0].sd) + '!!!');
     return {data: x.rows};
@@ -45,7 +48,9 @@ export async function load() {
 
 // load().then(console.log); // Вывод данных в консоль
 
+//
 // Загрузка из файла
+//
  function xload() {
 
   let lines = readFileSync('./spr.txt', 'utf-8').split(/\r?\n/);
@@ -65,7 +70,11 @@ export async function load() {
 }
 
 
+
 export const actions = {
+  //
+  // Обновить / вставить запись
+  //
   save: async ({ cookies, request }) => {
 
       const data = await request.formData();
@@ -103,7 +112,9 @@ export const actions = {
       return { success: true, msg: 'Данные обновлены...' };
   },
 
+  //
   // Мягкое удаление строки, меняю знак id на отрицательный
+  //
   delete: async ({ cookies, request }) => {
 
     const data = await request.formData();
@@ -125,6 +136,9 @@ export const actions = {
     return { success: true, msg: 'Строка удалена...'  };
   },
 
+  //
+  // Обновить страницу в соответствии с заданными парметрами
+  //
   refresh: async ({ cookies, request }) => {
 
     const data = await request.formData();
@@ -132,8 +146,8 @@ export const actions = {
 
     sortorder = data.get('sortorder');
     sortby = data.get('sortby');
-    showdeleted = data.get('showdeleted');;
-    //load();
+    showdeleted = data.get('showdeleted');
+    //load(); // и так выполняется при открытии страницы
     return {x, sortby, sortorder, showdeleted, success: true, msg: 'Данные обновлены...'  };
 
     if (Number(x) == 0) {
