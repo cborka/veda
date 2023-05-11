@@ -20,6 +20,12 @@ let sd = '';
 let fio = '';
 let tel = '';
 
+// Фильтры
+let filter_id = 0;
+let filter_sd = '';
+let filter_fio = '';
+let filter_tel = '';
+
 //
 // Добавить строку (новый телефонный номер)
 //
@@ -161,7 +167,7 @@ function refreshDeleted() {
 
 function filterK(event) {
   if (event.key == 'Enter')
-    alert(JSON.stringify(event?.target.id) + ', ' + event?.type);
+    alert(JSON.stringify(event?.target.id) + ', ' + event?.type + ', ' + event?.target.value  + ', ' + filter_sd);
 
 
 //  refreshForm.submit();    
@@ -184,7 +190,7 @@ function filterK(event) {
         <th id="th_id" on:click={refreshOrder}>Id</th>
         <th id="th_sd" title=''>
           <p>Подразделение <button id="sr_sd" on:click={refreshOrder}>сорт</button></p> 
-            <input class="filter" id="zx123" name="filter_sd" type="text" placeholder="фильтр" value="" on:keyup={filterK}>
+            <input class="filter" id="zx123" name="filter_sd" type="text" placeholder="фильтр" bind:value="{filter_sd}" on:keyup={filterK}>
         </th>
         <th id="th_fio" title="Фамилия Имя Отчество" on:click={refreshOrder}>ФИО</th>
         <th id="th_tel" title="Телефонный номер" on:click={refreshOrder}>Номер</th> 
