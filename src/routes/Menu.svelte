@@ -33,18 +33,17 @@ function toggleMenu() {
       <a class="navbar-item" href="/bu.html">bu.html</a>
       <a class="navbar-item" href="/phone/book">☎ Телефоны</a>
       
-      <div class="navbar-item has-dropdown is-hoverable">
+      <!-- <div class="navbar-item has-dropdown is-hoverable">
         <a class="navbar-link" href="/">SVG</a>
         <div class="navbar-dropdown is-boxed">
           <a class="navbar-item" href="/violin.svg">
             Violin
           </a>
-          <!-- <hr class="navbar-divider"> -->
           <a class="navbar-item" href="/alarm.svg">
             Alarm
           </a>
         </div>
-      </div>
+      </div> -->
     </div>
 
     <div class="navbar-end">
