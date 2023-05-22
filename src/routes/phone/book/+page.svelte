@@ -1,10 +1,15 @@
 <script>
 // @ts-nocheck
 
+import { enhance } from '$app/forms';
+
+import Phone from './Phone';
+
 export let data;
 export let form;
 
-import { enhance } from '$app/forms';
+let phone = new Phone(0);
+let phone_filter = new Phone('', "");
 
 let variant = 11;
 let saved = '...';
@@ -14,32 +19,26 @@ let sortorder = 'asc';
 let sortby = 'id';
 let showdeleted = "false";
 
+// let id = 0;
+// let sd = '';
+// let fio = '';
+// let tel = '';
 
-let id = 0;
-let sd = '';
-let fio = '';
-let tel = '';
-
-// Фильтры
-let filter_id = 0;
-let filter_sd = '';
-let filter_fio = '';
-let filter_tel = '';
+// // Фильтры
+// let filter_id = 0;
+// let filter_sd = '';
+// let filter_fio = '';
+// let filter_tel = '';
 
 //
 // Добавить строку (новый телефонный номер)
 //
 function newNumber() {
- 
-  // id = 0;
-  // sd = '';
-  // fio = '';
-  // tel = '';
 
-  editForm.id.value = id = 0;
-  editForm.sd.value = sd = '';
-  editForm.fio.value = fio = '';
-  editForm.tel.value = tel = '';
+  editForm.id.value = phone.id = 0;
+  editForm.sd.value = phone.sd = '';
+  editForm.fio.value = phone.fio = '';
+  editForm.tel.value = phone.tel = '';
 
   openmodal();
 }
@@ -57,10 +56,10 @@ function editNumber() {
     // то если повторно открываем форму с теми же данными, то они не перечитываются и поля оказываются пустыми
     // Можно было использовать bind если бы поля инициализровались просто переменными, а не выражениями на случай ошибок.
   
-    editForm.id.value = id = data.data[b].id;
-    editForm.sd.value = sd = data.data[b].sd;
-    editForm.fio.value = fio = data.data[b].fio;
-    editForm.tel.value = tel = data.data[b].tel;
+    editForm.id.value = phone.id = data.data[b].id;
+    editForm.sd.value = phone.sd = data.data[b].sd;
+    editForm.fio.value = phone.fio = data.data[b].fio;
+    editForm.tel.value = phone.tel = data.data[b].tel;
   }
   //alert('['+id+sd+fio+tel+']')
 
@@ -73,10 +72,10 @@ function editNumber() {
 function deleteNumber() {
   let b = +this.id;
   if(b >= 0) {
-    deleteForm.id.value = id = data.data[b].id;
-    sd = data.data[b].sd;
-    fio = data.data[b].fio;
-    tel = data.data[b].tel;
+    deleteForm.id.value = phone.id = data.data[b].id;
+    phone.sd = data.data[b].sd;
+    phone.fio = data.data[b].fio;
+    phone.tel = data.data[b].tel;
   }
   //alert('['+id+sd+fio+tel+']')
 
@@ -166,14 +165,20 @@ function refreshDeleted() {
 
 
 function filterK(event) {
-  if (event.key == 'Enter')
-    alert(JSON.stringify(event?.target.id) + ', ' + event?.type + ', ' + event?.target.value  + ', ' + filter_sd);
+  if (event.key == 'Enter') {
+    refreshForm.fsd.value = phone_filter.sd;
+    refreshForm.submit();
+  }
 
-
+//    alert(JSON.stringify(event?.target.id) + ', ' + event?.type + ', ' + event?.target.value  + ', ' + phone_filter.sd);
 //  refreshForm.submit();    
 }
 
+phone_filter = data.phone_filter;
+
+//refreshForm?.submit();
 </script>
+
 
 
 <div class="title is-4 has-text-info">Телефонная книга</div>
@@ -190,7 +195,7 @@ function filterK(event) {
         <th id="th_id" on:click={refreshOrder}>Id</th>
         <th id="th_sd" title=''>
           <p>Подразделение <button id="sr_sd" on:click={refreshOrder}>сорт</button></p> 
-            <input class="filter" id="zx123" name="filter_sd" type="text" placeholder="фильтр" bind:value="{filter_sd}" on:keyup={filterK}>
+            <input class="filter" name="filter_sd" type="text" placeholder="фильтр" bind:value="{phone_filter.sd}" on:keyup={filterK}>
         </th>
         <th id="th_fio" title="Фамилия Имя Отчество" on:click={refreshOrder}>ФИО</th>
         <th id="th_tel" title="Телефонный номер" on:click={refreshOrder}>Номер</th> 
@@ -257,7 +262,7 @@ function filterK(event) {
       <div class="field">
         <label class="label">Id
           <div class="control">
-            <input name="id" class="input" type="number" placeholder=""  value="{form?.id ?? id}" readonly>
+            <input name="id" class="input" type="number" placeholder=""  value="{form?.id ?? phone.id}" readonly>
           </div>
       </label>
       </div>
@@ -265,7 +270,7 @@ function filterK(event) {
       <div class="field">
         <div class="control">
           <label class="label">Подразделение
-            <input name="sd" class="input is-success" type="text" placeholder="Бухгалтерия" value="{form?.sd ?? sd}">
+            <input name="sd" class="input is-success" type="text" placeholder="Бухгалтерия" value="{form?.sd ?? phone.sd}">
           </label>
         </div>
       </div>
@@ -273,7 +278,7 @@ function filterK(event) {
       <div class="field control">
         <div class="">
           <label class="label">ФИО
-            <input name="fio" class="input is-success" type="text" placeholder="Иванов И.И." value="{form?.fio ?? fio}">
+            <input name="fio" class="input is-success" type="text" placeholder="Иванов И.И." value="{form?.fio ?? phone.fio}">
           </label>
         </div>
         <p class="help is-success">Хорошее имя!</p>
@@ -282,7 +287,7 @@ function filterK(event) {
       <div class="field control">
         <div class="">
           <label class="label">Телефон
-            <input name="tel" class="input is-success" type="text" placeholder="11-11-11" required value="{form?.tel ?? tel}">
+            <input name="tel" class="input is-success" type="text" placeholder="11-11-11" required value="{form?.tel ?? phone.tel}">
           </label>
         </div>
         <!-- <p class="help is-success">Хорошее имя!</p> -->
@@ -322,14 +327,14 @@ function filterK(event) {
     <br>
     <div id="modal-box2" class="box block">
 
-      <p class="title is-5">Удалить строку {form?.id ?? id}??? ({sd}|{fio}|{tel})</p>
+      <p class="title is-5">Удалить строку {form?.id ?? phone.id}??? ({phone.sd}|{phone.fio}|{phone.tel})</p>
 
       <form name="deleteForm" class="" method="POST" action="?/delete">
 
         <div class="field">
           <label class="label">
             <div class="control">
-              <input name="id"  type="number" value="{form?.id ?? id}"  hidden readonly>
+              <input name="id"  type="number" value="{form?.id ?? phone.id}"  hidden readonly>
             </div>
         </label>
         </div>
@@ -356,7 +361,7 @@ function filterK(event) {
 
 <!-- ++++++++++++++++++++++++++ Refresh +++++++++++++++++++++++++++++++++ -->
 
-<div id="modal3" class="{modal3}" >
+<div id="modal3" class="{modal3}"  >
   
   <!-- <div class="modal-background" ></div> -->
   <div class="modal-background" on:click={closemodal3} on:keyup={null}></div>
@@ -370,18 +375,29 @@ function filterK(event) {
       <form name="refreshForm" class="" method="POST" action="?/refresh">
 
 
-        <input name="sortby"  type="text" value="{form?.sortby ?? sortby}" xhidden readonly>
-        <input name="sortorder" type="text" value="{form?.sortorder ?? sortorder}" xhidden readonly>
-        <input name="showdeleted" type="text" value="{form?.showdeleted ?? showdeleted}" xhidden readonly>
+        <!-- <input name="sortby" type="text" value="{form?.sortby ?? sortby}" xhidden readonly title="По какому полю сортировать">
+        <input name="sortorder" type="text" value="{form?.sortorder ?? sortorder}" xhidden readonly title="Порядок сортировки">
+        <input name="showdeleted" type="text" value="{form?.showdeleted ?? showdeleted}" xhidden readonly title="Показать удалённые"> -->
         
+        <input name="sortby" type="text" value="{data.param.sortby ?? sortby}" xhidden readonly title="По какому полю сортировать">
+        <input name="sortorder" type="text" value="{data.param.sortorder ?? sortorder}" xhidden readonly title="Порядок сортировки">
+        <input name="showdeleted" type="text" value="{data.param.showdeleted ?? showdeleted}" xhidden readonly title="Показать удалённые">
 
-      <div class="field">
-        <label class="label">
-          <div class="control">
-            <input name="x" class="xinput" type="number" value="{form?.x ?? x}" hidden>
-          </div>
-      </label>
-      </div>
+        <p>Фильтр<br></p>
+
+       <!-- <input name="fid" class="" type="text" title="Id" value="{form?.fid ?? phone_filter.id}" >
+       <input name="fsd" class="" type="text" title="Подразделение" value="{phone_filter.sd = form?.fsd ?? phone_filter.sd}">
+       <input name="ffio" class="" type="text" title="ФИО" value="{form?.ffio ?? phone_filter.fio}">
+       <input name="ftel" class="" type="text" title="Номер телефона" value="{form?.ftel ?? phone_filter.tel}"> -->
+
+       <input name="fid" class="" type="text" title="Id" value="{data.phone_filter.id}" >
+       <input name="fsd" class="" type="text" title="Подразделение" value="{data.phone_filter.sd}">
+       <input name="ffio" class="" type="text" title="ФИО" value="{data.phone_filter.fio}">
+       <input name="ftel" class="" type="text" title="Номер телефона" value="{data.phone_filter.tel}">
+
+
+       <!-- <p class="help is-success">Хорошее имя!</p> -->
+
       
       <div class="field is-grouped is-grouped-centered">
         <p class="control">
@@ -393,9 +409,9 @@ function filterK(event) {
       </div>
     </form>
 
-    {#if form?.missing}
-      <p class="darkgreen">{x=form?.x} missing {form?.msg} {openmodal3()}</p>
-    {/if}
+    {#if form?.fail3}
+      <p class="darkred"> {form?.err} {openmodal3()}</p>
+      {/if}
 
       <!-- Your content -->
       <!-- <button class="button" on:click={closemodal}>Close</button> -->
@@ -406,6 +422,7 @@ function filterK(event) {
 
 </div>
 
+<p class="dargreen"> {JSON.stringify(data.phone_filter)} {JSON.stringify(data.param)}</p>
 
 <p class="green">{JSON.stringify(form)}</p>
 <!-- {#if form?.error}

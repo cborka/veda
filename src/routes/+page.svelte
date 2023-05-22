@@ -5,16 +5,13 @@
 function test(z, ...args) {
   //console.log(arguments);
   return [args];
-
 }
 
 // let a = Symbol('x');
 // let b = Symbol('x');
 
-
-
 let S = Symbol('x');
- console.log(S);
+console.log(S);
 
 let obj = {
   a: 1114444,
@@ -84,7 +81,7 @@ function inB(a, b) {
 // }
 // hash(1, 2);
 
-// Promises
+// =============== Promises ===================
 
 let msg = '!<br>';
 function say(m) {

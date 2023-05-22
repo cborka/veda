@@ -4,44 +4,56 @@ import { error } from '@sveltejs/kit';
 import { fail, redirect } from '@sveltejs/kit';
 
 import {client} from '$lib/server/db.js';
+//import Phone from './Phone';
+
+class RefreshError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "RefreshError";
+  }
+}
+
+let phone_filter = {
+  id: '',
+  sd: '',
+  fio: '',
+  tel: ''
+}
 
 // Параметры загрузки страницы
+
+let param = {
+  sortorder:'asc',
+  sortby: 'id',
+  showdeleted: "false"
+}
+
 let sortorder = 'asc';
 let sortby = 'id';
 let showdeleted = "false";
 
+let sql = ''
+
+console.log('===>LoadScript');
 //
 // Загрузка из DB
 //
 export async function load() {
 
-  let sql = ''
-  let where = 'WHERE ';
-  let orderby = 'ORDER BY ';
+  if (!sql) make_sql();
 
-  if (showdeleted == "true") {
-    where += ' id < 0 ';
-  } else {
-    where += ' id > 0 ';
-  }
+  console.log('SQL='+sql);
 
-  if (sortby == '') {sortby += 'id'; } 
-  if (sortorder == '') {sortorder += 'asc'; } 
-  orderby += sortby + ' ' + sortorder;
-  
-  sql = `SELECT id, sd, fio, tel FROM phones ${where} ${orderby}`;
-  
-  console.log('sql = ' + sql);
+  // data.phone_filter = phone_filter;
+  // data.sortby = sortby;
+  // data.sortorder = sortorder;
+  // data.showdeleted = showdeleted;
 
   try {
     let x = await client.query(sql, []);
-
-    // console.log('PROMISE CLIENT = ' + JSON.stringify( x.rows[0].sd) + '!!!');
-    return {data: x.rows};
-    // return 'SUCCESS...';
+    return {data: x.rows, param, phone_filter};
   } catch(err) {
     console.log('ОШИБКА === ' + err); // TypeError: failed to fetch
-    // return 'FAIL...';
   }
 
 }
@@ -67,6 +79,39 @@ export async function load() {
     }); 
   }
   return { data };
+}
+
+//
+//  Сформировать SQL-запрос
+//
+function make_sql() {
+  sql = ''
+  let where = 'WHERE ';
+  let orderby = 'ORDER BY ';
+
+  if (param.showdeleted == "true") {
+    where += ' id < 0 ';
+  } else {
+    where += ' id > 0 ';
+  }
+
+  if (param.sortby == '') {param.sortby += 'id'; } 
+  if (param.sortorder == '') {param.sortorder += 'asc'; } 
+  orderby += param.sortby + ' ' + param.sortorder;
+  
+  let f = '';
+  console.log('phone_filter.sd='+phone_filter.sd);
+  if ((f = phone_filter.sd.trim()) != '') {
+    console.log('f='+f);
+    where += ' AND sd LIKE \'%'+f+ '%\' ';
+    //throw new Error("ERRRRORRR");
+    //return fail(400, { msg: ' missing: false', missing: false });
+  }
+
+  //if (refresh) throw new RefreshError("Ошибка обновления.");
+
+  return sql = `SELECT id, sd, fio, tel FROM phones ${where} ${orderby}`;
+  
 }
 
 
@@ -142,30 +187,45 @@ export const actions = {
   refresh: async ({ cookies, request }) => {
 
     const data = await request.formData();
-    let x = data.get('x');
 
-    sortorder = data.get('sortorder');
-    sortby = data.get('sortby');
-    showdeleted = data.get('showdeleted');
-    //load(); // и так выполняется при открытии страницы
-    return {x, sortby, sortorder, showdeleted, success: true, msg: 'Данные обновлены...'  };
+    phone_filter.id = data.get('fid');
+    phone_filter.sd = data.get('fsd');
+    phone_filter.fio = data.get('ffio');
+    phone_filter.tel = data.get('ftel');
 
-    if (Number(x) == 0) {
-			return fail(400, { msg: 'Ye t vft', missing: true });
-		} else if (Number(x) < 3) {
-      return fail(400, { x, msg: 'Number(x) < 3', missing: true });
-		} else if (Number(x) == 5) {
-      // if (url.searchParams.has('redirectTo')) {
-      //   throw redirect(303, url.searchParams.get('redirectTo'));
-      // }
-      throw redirect(303, '/about');
-    } else {
-      //fail(400, { msg: ' missing: false', missing: false });
+    param.sortorder = data.get('sortorder');
+    param.sortby = data.get('sortby');
+    param.showdeleted = data.get('showdeleted');
+
+    try {
+       make_sql();
+    } catch (err) {
+      return fail(400, { fail3: true, err: err?.message, sortby: param.sortby, sortorder: param.sortorder, showdeleted: param.showdeleted, fid: phone_filter.id, fsd:phone_filter.sd, ffio: phone_filter.fio, ftel: phone_filter.tel});
     }
+
+    // load(); // и так выполняется при открытии страницы
+    
+    console.log(param.sortby, param.sortorder, param.showdeleted, 'Данные обновлены...', phone_filter.id, phone_filter.sd, phone_filter.fio, phone_filter.tel);
+
+    return {sortby: param.sortby, sortorder: param.sortorder, showdeleted: param.showdeleted, success: true, msg: 'Данные обновлены...', fid: phone_filter.id, fsd:phone_filter.sd, ffio: phone_filter.fio, ftel: phone_filter.tel};
+
+
+    // if (Number(x) == 0) {
+		// 	return fail(400, { msg: 'Ye t vft', missing: true });
+		// } else if (Number(x) < 3) {
+    //   return fail(400, { x, msg: 'Number(x) < 3', missing: true });
+		// } else if (Number(x) == 5) {
+    //   // if (url.searchParams.has('redirectTo')) {
+    //   //   throw redirect(303, url.searchParams.get('redirectTo'));
+    //   // }
+    //   throw redirect(303, '/about');
+    // } else {
+    //   //fail(400, { msg: ' missing: false', missing: false });
+    // }
 
     console.log(`Обновление...`);
     
-    show_deleted = !show_deleted;
+    param.show_deleted = !param.show_deleted;
     //load();
 
     return {x, success: true, msg: 'Данные обновлены...'  };
