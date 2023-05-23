@@ -4,7 +4,11 @@ import { error } from '@sveltejs/kit';
 import { fail, redirect } from '@sveltejs/kit';
 
 import {client} from '$lib/server/db.js';
-//import Phone from './Phone';
+
+
+import Phone from './Phone';
+
+import { disableScrollHandling } from '$app/navigation';
 
 class RefreshError extends Error {
   constructor(message) {
@@ -13,28 +17,25 @@ class RefreshError extends Error {
   }
 }
 
-let phone_filter = {
-  id: '',
-  sd: '',
-  fio: '',
-  tel: ''
-}
+let phone_filter = new Phone();
 
 // Параметры загрузки страницы
-
 let param = {
   sortorder:'asc',
   sortby: 'id',
   showdeleted: "false"
 }
 
-let sortorder = 'asc';
-let sortby = 'id';
-let showdeleted = "false";
-
 let sql = ''
 
+let k = Object.keys(phone_filter.vals);
+
 console.log('===>LoadScript');
+// console.log('===>' + JSON.stringify(phone_filter.vals));
+// console.log('===>' + Object.values(phone_filter.vals));
+// console.log('===>' + typeof k + JSON.stringify(k));
+//console.log('===>' + JSON.stringify(Field('1', 'qqq')));
+
 //
 // Загрузка из DB
 //
@@ -44,14 +45,11 @@ export async function load() {
 
   console.log('SQL='+sql);
 
-  // data.phone_filter = phone_filter;
-  // data.sortby = sortby;
-  // data.sortorder = sortorder;
-  // data.showdeleted = showdeleted;
-
   try {
     let x = await client.query(sql, []);
-    return {data: x.rows, param, phone_filter};
+    //console.log('queryResult='+JSON.stringify(x,null,2));
+    return {data: x.rows, param, phone_filter: phone_filter.vals};  // Возвращаю не только данные, но и параметры отображения таблицы
+//    return {data: x.rows, param, phone_filter: phone_filter.toJSON()};  // Возвращаю не только данные, но и параметры отображения таблицы
   } catch(err) {
     console.log('ОШИБКА === ' + err); // TypeError: failed to fetch
   }
@@ -99,14 +97,64 @@ function make_sql() {
   if (param.sortorder == '') {param.sortorder += 'asc'; } 
   orderby += param.sortby + ' ' + param.sortorder;
   
-  let f = '';
-  console.log('phone_filter.sd='+phone_filter.sd);
-  if ((f = phone_filter.sd.trim()) != '') {
-    console.log('f='+f);
-    where += ' AND sd LIKE \'%'+f+ '%\' ';
-    //throw new Error("ERRRRORRR");
-    //return fail(400, { msg: ' missing: false', missing: false });
+  console.log('>' + JSON.stringify(phone_filter.vals));
+  for (let fld in phone_filter.vals) {
+    
+    console.log('fld='+JSON.stringify(fld));
+    
+    let f = phone_filter.vals[fld].trim();
+    let t = phone_filter.types[fld];
+    console.log('f='+JSON.stringify(f) + t);
+    if (f != "" ) {
+      if (t == 's') {
+        // console.log('val='+phone_filter[fld]);
+        // console.log(` AND ${fld} LIKE '%${f}%' `);
+        where += ` AND ${fld} LIKE '%${f}%' `;
+      } else if (t == 'i') {  
+        // if (f[0] != '<' && f[0] != '>' && f[0] != '=') {f = '= ' + f;}
+        // console.log(` AND ${fld} ${f} `);
+        // where += ` AND ${fld} ${f} `;
+        let beg = 0;
+        let op = '=';
+        let num = 0;
+        if (f[0] == '<' || f[0] == '>' || f[0] == '=') {
+          beg++; 
+          op = f[0];
+          if (f[1] == '=') {
+            beg++; 
+            op += f[1];
+          }
+        } else {
+          if (f[0] == '=') beg++;
+        }
+        num = parseFloat(f.slice(beg));
+
+        if (isNaN(num)) {
+          console.log("Неверный формат фильтра у колонки " + fld);
+          phone_filter.vals[fld] = 'ОШИБКА';
+//          throw new Error ("Неверный формат фильтра у колонки " + fld);
+        } else {
+          if (op == '==') {
+            op = '=';
+          }
+          console.log(` AND ${fld} ${op} ${num} `);
+          where += ` AND ${fld} ${op} ${num} `;
+        }
+
+        // if (f[0] != '<' && f[0] != '>' && f[0] != '=') {f = '= ' + f;}
+        // console.log(` AND ${fld} ${f} `);
+        // where += ` AND ${fld} ${f} `;
+      }
+    }
   }
+  // let f = '';
+  // //console.log('phone_filter.sd='+phone_filter.sd);
+  // if ((f = phone_filter.sd.trim()) != '') {
+  //   console.log('f='+f);
+  //   where += ' AND sd LIKE \'%'+f+ '%\' ';
+  //   //throw new Error("ERRRRORRR");
+  //   //return fail(400, { msg: ' missing: false', missing: false });
+  // }
 
   //if (refresh) throw new RefreshError("Ошибка обновления.");
 
@@ -188,10 +236,10 @@ export const actions = {
 
     const data = await request.formData();
 
-    phone_filter.id = data.get('fid');
-    phone_filter.sd = data.get('fsd');
-    phone_filter.fio = data.get('ffio');
-    phone_filter.tel = data.get('ftel');
+    phone_filter.vals.id = data.get('fid');
+    phone_filter.vals.sd = data.get('fsd');
+    phone_filter.vals.fio = data.get('ffio');
+    phone_filter.vals.tel = data.get('ftel');
 
     param.sortorder = data.get('sortorder');
     param.sortby = data.get('sortby');
@@ -207,6 +255,8 @@ export const actions = {
     
     console.log(param.sortby, param.sortorder, param.showdeleted, 'Данные обновлены...', phone_filter.id, phone_filter.sd, phone_filter.fio, phone_filter.tel);
 
+    return {success: true, msg: 'Данные обновлены...'};
+    
     return {sortby: param.sortby, sortorder: param.sortorder, showdeleted: param.showdeleted, success: true, msg: 'Данные обновлены...', fid: phone_filter.id, fsd:phone_filter.sd, ffio: phone_filter.fio, ftel: phone_filter.tel};
 
 
