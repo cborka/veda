@@ -8,7 +8,8 @@
 
 <style>
   h1 {
-      color: rgb(255, 238, 0);
-      background-color: blue;
+      font-weight: bold;
+      color: red;
+      background-color: black;
   }
 </style>

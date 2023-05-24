@@ -8,37 +8,29 @@ import Phone from './Phone';
 export let data;
 export let form;
 
-let phone = new Phone(0);
-let phone_filter = new Phone('', "");
+let table_row = new Phone(0);
+let filters = new Phone('', "");
 
-let variant = 11;
-let saved = '...';
-let x = 0;
+let phone = table_row.values;
+
 
 let sortorder = 'asc';
 let sortby = 'id';
 let showdeleted = "false";
 
-// let id = 0;
-// let sd = '';
-// let fio = '';
-// let tel = '';
-
-// // Фильтры
-// let filter_id = 0;
-// let filter_sd = '';
-// let filter_fio = '';
-// let filter_tel = '';
-
 //
 // Добавить строку (новый телефонный номер)
 //
-function newNumber() {
+function newRow() {
 
-  editForm.id.value = phone.id = 0;
-  editForm.sd.value = phone.sd = '';
-  editForm.fio.value = phone.fio = '';
-  editForm.tel.value = phone.tel = '';
+  for(let p in phone) {
+    editForm[p].value = phone[p] = table_row.defaults[p];
+  }
+
+  // editForm.id.value = phone.id = 0;
+  // editForm.sd.value = phone.sd = '';
+  // editForm.fio.value = phone.fio = '';
+  // editForm.tel.value = phone.tel = '';
 
   openmodal();
 }
@@ -46,7 +38,7 @@ function newNumber() {
 //
 // Изменить строку (телефонный номер)
 //
-function editNumber() {
+function editRow() {
   let b = this.id;
   //location.href = "/phone/edit/"+b;
   if(b != '') {
@@ -56,10 +48,18 @@ function editNumber() {
     // то если повторно открываем форму с теми же данными, то они не перечитываются и поля оказываются пустыми
     // Можно было использовать bind если бы поля инициализровались просто переменными, а не выражениями на случай ошибок.
   
-    editForm.id.value = phone.id = data.data[b].id;
-    editForm.sd.value = phone.sd = data.data[b].sd;
-    editForm.fio.value = phone.fio = data.data[b].fio;
-    editForm.tel.value = phone.tel = data.data[b].tel;
+    for(let p in phone) {
+      editForm[p].value = phone[p] = data.data[b][p];
+    }
+
+    // editForm.id.value = phone.id = data.data[b].id;
+    // editForm.sd.value = phone.sd = data.data[b].sd;
+    // editForm.fio.value = phone.fio = data.data[b].fio;
+    // editForm.tel.value = phone.tel = data.data[b].tel;
+
+    // for(let p in phone) {
+    //   say ('1'+p+typeof(p)+phone[p]);
+    // }
   }
   //alert('['+id+sd+fio+tel+']')
 
@@ -69,15 +69,27 @@ function editNumber() {
 //
 // Удалить строку (телефонный номер)
 //
-function deleteNumber() {
+let delete_restore = 'Удалить ';
+
+function deleteRow() {
   let b = +this.id;
   if(b >= 0) {
-    deleteForm.id.value = phone.id = data.data[b].id;
-    phone.sd = data.data[b].sd;
-    phone.fio = data.data[b].fio;
-    phone.tel = data.data[b].tel;
+    for(let p in phone) {
+      phone[p] = data.data[b][p];
+    }
+    deleteForm.id.value = phone.id;
+    // deleteForm.id.value = phone.id = data.data[b].id;
+    // phone.sd = data.data[b].sd;
+    // phone.fio = data.data[b].fio;
+    // phone.tel = data.data[b].tel;
   }
   //alert('['+id+sd+fio+tel+']')
+
+  if (phone.id > 0) {
+    delete_restore = 'Удалить ';
+  } else {
+    delete_restore = 'Восстановить ';
+  }
 
   openmodal2(); // удаление строки
 }
@@ -118,11 +130,6 @@ function closemodal3() {
 }
 
 
-//let mb = document.getElementById("modal-box");
-//alert(mb.class);
-//console.log('xxxnewNumber');
-
-
 //
 // Изменить порядок сортировки таблицы
 //
@@ -141,7 +148,7 @@ function refreshOrder() {
     refreshForm.sortby.value = sortby = col_name;
     refreshForm.sortorder.value = sortorder ='asc';
   }
-  //refreshDeleted()
+
   refreshForm.submit();
 }
 
@@ -151,7 +158,7 @@ function refreshOrder() {
 //
 function refreshDeleted() {
   //alert(showdeleted + ', '+ refreshForm.showdeleted.checked + ', ' + refreshForm.showdeleted.value);
-
+  //throw new Error ("Неверный формат фильтра у колонки " + fld, 404);
   if (refreshForm.showdeleted.value == "true") {
     refreshForm.showdeleted.value = showdeleted = "false";
   } else {
@@ -163,22 +170,32 @@ function refreshDeleted() {
   refreshForm.submit();
 }
 
-
+//
+// Обработка нажания клавиши
+//
 function filterK(event) {
   if (event.key == 'Enter') {
-    refreshForm.fsd.value = phone_filter.sd;
+    for(let p in phone) {
+      refreshForm['f'+p].value = filters[p];
+    }
+    //refreshForm.fsd.value = filters.sd;
     refreshForm.submit();
   }
 
-//    alert(JSON.stringify(event?.target.id) + ', ' + event?.type + ', ' + event?.target.value  + ', ' + phone_filter.sd);
-//  refreshForm.submit();    
+//    alert(JSON.stringify(event?.target.id) + ', ' + event?.type + ', ' + event?.target.value  + ', ' + filters.sd);
 }
 
-phone_filter = data.phone_filter;
+// Синхронизирую фильтры клиента в соответствии с фильтрами, которые применены на сервере
+filters = data.filters;
 
-//refreshForm?.submit();
+// Вывод отладки в текущее окно (чтобы постоянно alert не закрывать)
+let msg = '';
+function say(m) {
+  msg += m + '<br>';
+  return m;
+}
+
 </script>
-
 
 
 <div class="title is-4 has-text-info">Телефонная книга</div>
@@ -192,15 +209,25 @@ phone_filter = data.phone_filter;
     <col class="coll" />
     <thead>
       <tr>
-        <th id="th_id" on:click={refreshOrder}>Id</th>
-        <th id="th_sd" title=''>
-          <p>Подразделение <button id="sr_sd" on:click={refreshOrder}>сорт</button></p> 
-            <input class="filter" name="filter_sd" type="text" placeholder="фильтр" bind:value="{phone_filter.sd}" on:keyup={filterK}>
+        <th id="th_id">
+          <p id="sr_id" on:click={refreshOrder} on:keyup={refreshOrder} >Id </p> 
+          <input class="filter" name="filter_id" type="text" placeholder="фильтр" bind:value="{filters.id}" on:keyup={filterK}>
         </th>
-        <th id="th_fio" title="Фамилия Имя Отчество" on:click={refreshOrder}>ФИО</th>
-        <th id="th_tel" title="Телефонный номер" on:click={refreshOrder}>Номер</th> 
+        <th id="th_sd" title=''>
+          <!-- <p>Подразделение <button id="sr_sd" on:click={refreshOrder}>сорт</button></p>  -->
+          <p id="sr_sd" on:click={refreshOrder} on:keyup={refreshOrder} >Подразделение </p> 
+          <input class="filter" name="filter_sd" type="text" placeholder="фильтр" bind:value="{filters.sd}" on:keyup={filterK}>
+        </th>
+        <th id="th_fio">
+          <p id="sr_fio" on:click={refreshOrder} on:keyup={refreshOrder}  title="Фамилия Имя Отчество">ФИО</p> 
+          <input class="filter" name="filter_fio" type="text" placeholder="" bind:value="{filters.fio}" on:keyup={filterK}>
+        </th>
+        <th id="th_tel">
+          <p id="sr_tel" on:click={refreshOrder} on:keyup={refreshOrder}  title="Телефонный номер">Номер</p> 
+          <input class="filter" name="filter_tel" type="text" placeholder="" bind:value="{filters.tel}" on:keyup={filterK}>
+        </th> 
         <th>
-          <button class="ic green" title="Добавить новый номер" on:click={newNumber}>
+          <button class="ic green" title="Добавить новый номер" on:click={newRow}>
             <b>╋</b>
           </button>
         </th>
@@ -232,9 +259,9 @@ phone_filter = data.phone_filter;
         <td>{tel.fio}</td>
         <td>{tel.tel}</td>
         <td class=""> 
-          <button id="{idx}" class="green ic" title="Изменить!" on:click={editNumber}> &#9997;</button>  
+          <button id="{idx}" class="green ic" title="Изменить!" on:click={editRow}> &#9997;</button>  
           <!-- ✍ ╳ -->
-          <button id="{idx}" class="red ic" title="Удалить" on:click={deleteNumber}><b>&#9587;</b></button>
+          <button id="{idx}" class="red ic" title="Удалить" on:click={deleteRow}><b>&#9587;</b></button>
         </td>
       </tr>
     {/each}  
@@ -242,6 +269,8 @@ phone_filter = data.phone_filter;
     </tbody>
   </table>
 </div>
+
+<p>{@html msg}</p>
 
 <!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
 
@@ -327,7 +356,7 @@ phone_filter = data.phone_filter;
     <br>
     <div id="modal-box2" class="box block">
 
-      <p class="title is-5">Удалить строку {form?.id ?? phone.id}??? ({phone.sd}|{phone.fio}|{phone.tel})</p>
+      <p class="title is-5">{delete_restore} строку {form?.id ?? phone.id}??? ({phone.sd}|{phone.fio}|{phone.tel})</p>
 
       <form name="deleteForm" class="" method="POST" action="?/delete">
 
@@ -341,7 +370,7 @@ phone_filter = data.phone_filter;
         
         <div class="field is-grouped is-grouped-centered">
           <p class="control">
-            <button type="submit" class="button is-danger is-light">Удалить</button>
+            <button type="submit" class="button is-danger is-light">{delete_restore}</button>
           </p>
           <p class="control">
             <button type="button" class="button is-warning is-light" on:click={closemodal2}>Отмена</button>
@@ -385,15 +414,15 @@ phone_filter = data.phone_filter;
 
         <p>Фильтр<br></p>
 
-       <!-- <input name="fid" class="" type="text" title="Id" value="{form?.fid ?? phone_filter.id}" >
-       <input name="fsd" class="" type="text" title="Подразделение" value="{phone_filter.sd = form?.fsd ?? phone_filter.sd}">
-       <input name="ffio" class="" type="text" title="ФИО" value="{form?.ffio ?? phone_filter.fio}">
-       <input name="ftel" class="" type="text" title="Номер телефона" value="{form?.ftel ?? phone_filter.tel}"> -->
+       <!-- <input name="fid" class="" type="text" title="Id" value="{form?.fid ?? filters.id}" >
+       <input name="fsd" class="" type="text" title="Подразделение" value="{filters.sd = form?.fsd ?? filters.sd}">
+       <input name="ffio" class="" type="text" title="ФИО" value="{form?.ffio ?? filters.fio}">
+       <input name="ftel" class="" type="text" title="Номер телефона" value="{form?.ftel ?? filters.tel}"> -->
 
-       <input name="fid" class="" type="text" title="Id" value="{data.phone_filter.id}" >
-       <input name="fsd" class="" type="text" title="Подразделение" value="{data.phone_filter.sd}">
-       <input name="ffio" class="" type="text" title="ФИО" value="{data.phone_filter.fio}">
-       <input name="ftel" class="" type="text" title="Номер телефона" value="{data.phone_filter.tel}">
+       <input name="fid" class="" type="text" title="Id" value="{data.filters.id}" >
+       <input name="fsd" class="" type="text" title="Подразделение" value="{data.filters.sd}">
+       <input name="ffio" class="" type="text" title="ФИО" value="{data.filters.fio}">
+       <input name="ftel" class="" type="text" title="Номер телефона" value="{data.filters.tel}">
 
 
        <!-- <p class="help is-success">Хорошее имя!</p> -->
@@ -410,8 +439,9 @@ phone_filter = data.phone_filter;
     </form>
 
     {#if form?.fail3}
-      <p class="darkred"> {form?.err} {openmodal3()}</p>
-      {/if}
+    <!-- Здесь я вывел сообщение об ошибке в само модальное окно, открыл его и чтобы не было надписи undefined применил оператор ? -->
+      <p class="darkred"> {form?.err} {openmodal3()?'':''}</p> 
+    {/if}
 
       <!-- Your content -->
       <!-- <button class="button" on:click={closemodal}>Close</button> -->
@@ -421,8 +451,8 @@ phone_filter = data.phone_filter;
   <!-- <button class="modal-close is-large" aria-label="close" on:click={closemodal}>Close</button> -->
 
 </div>
-
-<p class="dargreen"> {JSON.stringify(data.phone_filter)} {JSON.stringify(data.param)}</p>
+ 
+<p class="darkgreen"> {JSON.stringify(data.filters)} {JSON.stringify(data.param)}</p>
 
 <p class="green">{JSON.stringify(form)}</p>
 <!-- {#if form?.error}

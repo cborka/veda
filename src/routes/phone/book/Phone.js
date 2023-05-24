@@ -1,7 +1,8 @@
 export default function Phone(id='', sd='', fio='', tel='') {
   return {
-    vals: {id, sd, fio, tel},
-    types: {id: 'i', sd: 's', fio: 's', tel: 's'}
+    values: {id, sd, fio, tel},
+    types: {id: 'n', sd: 's', fio: 's', tel: 's'},
+    defaults: {id: 0, sd: '', fio: '', tel: ''}
   }
 }
 
