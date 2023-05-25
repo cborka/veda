@@ -13,10 +13,11 @@ let filters = new Phone('', "");
 
 let phone = table_row.values;
 
-
-let sortorder = 'asc';
-let sortby = 'id';
-let showdeleted = "false";
+let param = {
+  sortorder:'asc',
+  sortby: 'id',
+  showdeleted: "false"
+}
 
 //
 // Добавить строку (новый телефонный номер)
@@ -57,9 +58,6 @@ function editRow() {
     // editForm.fio.value = phone.fio = data.data[b].fio;
     // editForm.tel.value = phone.tel = data.data[b].tel;
 
-    // for(let p in phone) {
-    //   say ('1'+p+typeof(p)+phone[p]);
-    // }
   }
   //alert('['+id+sd+fio+tel+']')
 
@@ -83,7 +81,6 @@ function deleteRow() {
     // phone.fio = data.data[b].fio;
     // phone.tel = data.data[b].tel;
   }
-  //alert('['+id+sd+fio+tel+']')
 
   if (phone.id > 0) {
     delete_restore = 'Удалить ';
@@ -135,18 +132,18 @@ function closemodal3() {
 //
 function refreshOrder() {
   let col_name = this.id.slice(3);
-  //alert(col_name);
+//  alert(col_name);
 
   if (refreshForm.sortby.value == col_name) {
     if (refreshForm.sortorder.value == 'asc') {
-      refreshForm.sortorder.value = sortorder ='desc';
+      refreshForm.sortorder.value = param.sortorder ='desc';
     } else {
-      refreshForm.sortorder.value = sortorder ='asc';
+      refreshForm.sortorder.value = param.sortorder ='asc';
     }
-    sortby = col_name; // на всякий случай
+    param.sortby = col_name; // на всякий случай
   } else {
-    refreshForm.sortby.value = sortby = col_name;
-    refreshForm.sortorder.value = sortorder ='asc';
+    refreshForm.sortby.value = param.sortby = col_name;
+    refreshForm.sortorder.value = param.sortorder ='asc';
   }
 
   refreshForm.submit();
@@ -157,23 +154,18 @@ function refreshOrder() {
 //  удаление производится сменой знака id на отрицательный, фактически просто прячем запись от показа
 //
 function refreshDeleted() {
-  //alert(showdeleted + ', '+ refreshForm.showdeleted.checked + ', ' + refreshForm.showdeleted.value);
-  //throw new Error ("Неверный формат фильтра у колонки " + fld, 404);
   if (refreshForm.showdeleted.value == "true") {
-    refreshForm.showdeleted.value = showdeleted = "false";
+    refreshForm.showdeleted.value = param.showdeleted = "false";
   } else {
-    refreshForm.showdeleted.value = showdeleted = "true";
+    refreshForm.showdeleted.value = param.showdeleted = "true";
   }
-
-  //alert(showdeleted + ', '+ refreshForm.showdeleted.checked + ', ' + refreshForm.showdeleted.value);
-
   refreshForm.submit();
 }
 
 //
-// Обработка нажания клавиши
+// Обработка нажания клавиши в фильтре
 //
-function filterK(event) {
+function filterOnKeyPress(event) {
   if (event.key == 'Enter') {
     for(let p in phone) {
       refreshForm['f'+p].value = filters[p];
@@ -197,7 +189,6 @@ function say(m) {
 
 </script>
 
-
 <div class="title is-4 has-text-info">Телефонная книга</div>
 
 <div class="table-container">
@@ -211,20 +202,20 @@ function say(m) {
       <tr>
         <th id="th_id">
           <p id="sr_id" on:click={refreshOrder} on:keyup={refreshOrder} >Id </p> 
-          <input class="filter" name="filter_id" type="text" placeholder="фильтр" bind:value="{filters.id}" on:keyup={filterK}>
+          <input class="filter" name="filter_id" type="text" placeholder="фильтр" bind:value="{filters.id}" on:keyup={filterOnKeyPress}>
         </th>
         <th id="th_sd" title=''>
           <!-- <p>Подразделение <button id="sr_sd" on:click={refreshOrder}>сорт</button></p>  -->
           <p id="sr_sd" on:click={refreshOrder} on:keyup={refreshOrder} >Подразделение </p> 
-          <input class="filter" name="filter_sd" type="text" placeholder="фильтр" bind:value="{filters.sd}" on:keyup={filterK}>
+          <input class="filter" name="filter_sd" type="text" placeholder="фильтр" bind:value="{filters.sd}" on:keyup={filterOnKeyPress}>
         </th>
         <th id="th_fio">
           <p id="sr_fio" on:click={refreshOrder} on:keyup={refreshOrder}  title="Фамилия Имя Отчество">ФИО</p> 
-          <input class="filter" name="filter_fio" type="text" placeholder="" bind:value="{filters.fio}" on:keyup={filterK}>
+          <input class="filter" name="filter_fio" type="text" placeholder="" bind:value="{filters.fio}" on:keyup={filterOnKeyPress}>
         </th>
         <th id="th_tel">
           <p id="sr_tel" on:click={refreshOrder} on:keyup={refreshOrder}  title="Телефонный номер">Номер</p> 
-          <input class="filter" name="filter_tel" type="text" placeholder="" bind:value="{filters.tel}" on:keyup={filterK}>
+          <input class="filter" name="filter_tel" type="text" placeholder="" bind:value="{filters.tel}" on:keyup={filterOnKeyPress}>
         </th> 
         <th>
           <button class="ic green" title="Добавить новый номер" on:click={newRow}>
@@ -404,13 +395,13 @@ function say(m) {
       <form name="refreshForm" class="" method="POST" action="?/refresh">
 
 
-        <!-- <input name="sortby" type="text" value="{form?.sortby ?? sortby}" xhidden readonly title="По какому полю сортировать">
-        <input name="sortorder" type="text" value="{form?.sortorder ?? sortorder}" xhidden readonly title="Порядок сортировки">
-        <input name="showdeleted" type="text" value="{form?.showdeleted ?? showdeleted}" xhidden readonly title="Показать удалённые"> -->
+        <!-- <input name="sortby" type="text" value="{form?.sortby ?? param.sortby}" xhidden readonly title="По какому полю сортировать">
+        <input name="sortorder" type="text" value="{form?.sortorder ?? param.sortorder}" xhidden readonly title="Порядок сортировки">
+        <input name="showdeleted" type="text" value="{form?.showdeleted ?? param.showdeleted}" xhidden readonly title="Показать удалённые"> -->
         
-        <input name="sortby" type="text" value="{data.param.sortby ?? sortby}" xhidden readonly title="По какому полю сортировать">
-        <input name="sortorder" type="text" value="{data.param.sortorder ?? sortorder}" xhidden readonly title="Порядок сортировки">
-        <input name="showdeleted" type="text" value="{data.param.showdeleted ?? showdeleted}" xhidden readonly title="Показать удалённые">
+        <input name="sortby" type="text" value="{data.param.sortby ?? param.sortby}" xhidden readonly title="По какому полю сортировать">
+        <input name="sortorder" type="text" value="{data.param.sortorder ?? param.sortorder}" xhidden readonly title="Порядок сортировки">
+        <input name="showdeleted" type="text" value="{data.param.showdeleted ?? param.showdeleted}" xhidden readonly title="Показать удалённые">
 
         <p>Фильтр<br></p>
 
@@ -452,19 +443,14 @@ function say(m) {
 
 </div>
  
-<p class="darkgreen"> {JSON.stringify(data.filters)} {JSON.stringify(data.param)}</p>
+<!-- <p class=""> Данные {JSON.stringify(data.data, null, 2)} </p>
+<p class=""> Параметры {JSON.stringify(data.param, null, 2)}</p>
+<p class=""> Фильтры {JSON.stringify(data.filters, null, 2)}</p>
+<p class=""> Форма {JSON.stringify(form)}</p> -->
 
-<p class="green">{JSON.stringify(form)}</p>
-<!-- {#if form?.error}
-  <p class="error">{form.error}</p>
-{/if} -->
 {#if form?.success}
     <p class="success">{form?.msg}</p>
 {/if}
-<!-- {#if form && (!form?.success) && (form?.err)}
-    <p class="error">Ошибка: {form?.err}.</p>
-{/if} -->
-
 
 <style>
 
@@ -482,7 +468,6 @@ function say(m) {
   left: 0%;
   right: 0%;
   margin: 0 auto;
-
 }
 
 /* .modal-content {
