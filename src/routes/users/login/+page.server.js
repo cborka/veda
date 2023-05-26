@@ -1,7 +1,34 @@
-// Получаем данные из формы
+// @ts-nocheck
+
 import { fail } from '@sveltejs/kit';
 import { error } from '@sveltejs/kit';
 import { json } from '@sveltejs/kit';
+import jwt from  'jsonwebtoken';
+
+let token = '';
+//let token = jwt.sign({ foo: 'bar' }, 'shhhhh');
+//console.log('token = ' + token);
+//console.log('token = ' + JSON.stringify(token));
+
+//let older_token = jwt.sign({ foo: 'bar', nbf: Math.floor(Date.now() / 1000) + 10 }, 'shhhhh');
+//console.log('older = ' + older_token);
+
+//let decoded = jwt.verify(token, 'shhhhh');
+//console.log(JSON.stringify(decoded)); 
+// try {
+//   decoded = jwt.verify(older_token, 'shhhhh');
+// } catch(err) {
+//   // @ts-ignore
+//   console.log(err?.name+': '+err?.message+': '+err?.date);
+// }
+
+
+export async function load() {
+
+  //return {token}
+
+}
+
 
 //import {client} from '../../../db';
 
@@ -10,27 +37,68 @@ import { json } from '@sveltejs/kit';
 // }
 
 export const actions = {
-  default: async ({ cookies, request }) => {
+  login: async ({ cookies, request }) => {
 
 		const data = await request.formData();
-    console.log('data = ' + JSON.stringify(data));
+
     let login = data.get('login');
     let password = data.get('password');
     
 		try {
+      token = jwt.sign(
+        { 
+          login: login, 
+          nbf: 1685096470, 
+//          nbf: Math.floor(Date.now() / 1000) - 5 
+        }, 'cbwbor');
 
-    } catch (error) {
+        //let decoded = jwt.verify(token, 'cbwbor');
+        //console.log(JSON.stringify(decoded, null, 4));
+
+      return {success: true, message: "Wellcome или Добро пожаловать!", token: token};
+
+    } catch (err) {
+
+      console.log(err?.name+': '+err?.message+': '+err?.date);
+
 			return fail(422, {
-				description: data.get('description'),
-				// @ts-ignore
-				error: error.message
+				fail: true, error: err?.name +': '+err.message + ': '+ (err?.name =='NotBeforeError'? err?.date : '')
 			});
+
 		}
     console.log(`login = ${login}`);
     console.log(`password = ${password}`);
-    get_name();
+//    get_name();
 	},
-  
+
+  token: async ({ cookies, request }) => {
+
+		const data = await request.formData();
+    token = data.get('token');
+    
+		try {
+
+        let decoded = jwt.verify(token, 'cbwbor');
+
+        console.log(JSON.stringify(decoded));
+
+        if (decoded.nbf < decoded.iat)
+          console.log('Fail'); 
+         // throw new Error("Ваш токен протух!")
+
+      return {success: true, message: "Wellcome или Добро пожаловать! ", token: token};
+
+    } catch (err) {
+
+      console.log(err?.name+': '+err?.message+': '+err?.date);
+
+			return fail(422, {
+				fail: true, error: err?.name +': '+err.message + ': '+ (err?.name =='NotBeforeError'? err?.date : '')
+			});
+
+		}
+	},
+
 };
 
 
