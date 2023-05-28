@@ -25,7 +25,7 @@ let token = '';
 
 export async function load() {
 
-  //return {token}
+  return {token}
 
 }
 
@@ -48,8 +48,9 @@ export const actions = {
       token = jwt.sign(
         { 
           login: login, 
-          nbf: 1685096470, 
-//          nbf: Math.floor(Date.now() / 1000) - 5 
+          exp: Math.floor(Date.now() / 1000) + (15),
+//          nbf: 1685096470, 
+//          nbf: Math.floor(Date.now() / 1000) + 10 
         }, 'cbwbor');
 
         //let decoded = jwt.verify(token, 'cbwbor');
@@ -81,6 +82,11 @@ export const actions = {
         let decoded = jwt.verify(token, 'cbwbor');
 
         console.log(JSON.stringify(decoded));
+
+        
+        console.log('now='+Math.floor(Date.now() / 1000));
+        console.log('iat='+decoded.iat);
+        //console.log('nbf='+decoded.nbf);
 
         if (decoded.nbf < decoded.iat)
           console.log('Fail'); 

@@ -6,7 +6,6 @@
    export let data;
    export let form;
 
-
   let user = {
     login: 'bor',
     password: '123'
@@ -14,16 +13,16 @@
 
   let token = '';
 
-function send_token() {
-  token = jwt.sign(
-        { 
-          login: login, 
-          nbf: 1685096470, 
-//          nbf: Math.floor(Date.now() / 1000) - 5 
-        }, 'cbwbor');
+// function send_token() {
+//   token = jwt.sign(
+//         { 
+//           login: login, 
+//           nbf: 1685096470, 
+// //          nbf: Math.floor(Date.now() / 1000) - 5 
+//         }, 'cbwbor');
 
-     //   loginToken.submit;
-}
+//      //   loginToken.submit;
+// }
 
 
   import { enhance } from '$app/forms';
@@ -55,7 +54,7 @@ function send_token() {
 
       <div class="field is-grouped is-grouped-centered">
         <p class="control">
-          <button type="submit" class="button is-success is-light">Сохранить</button>
+          <button type="submit" class="button is-success is-light">Войти</button>
         </p>
         <p class="control">
           <button type="button" class="button is-danger is-light" >Отменить</button>
@@ -75,7 +74,6 @@ function send_token() {
   
 
     <form name="loginToken" class="" method="POST" action="?/token">
-      <input name="token" type="text"  bind:value="{token}">
+      <input name="token" type="text"  bind:value="{data.token}">
       <button type="submit">Войти по токену</button>
-      <button on:click={send_token}>Сделать токен</button>
     </form>
