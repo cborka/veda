@@ -1,34 +1,28 @@
 <script>
 // @ts-nocheck
 
-//import jwt from  'jsonwebtoken';
+import { enhance } from '$app/forms';
 
-   export let data;
-   export let form;
+export let data;
+export let form;
 
-  let user = {
-    login: 'bor',
-    password: '123'
-  }
+let user = {
+  login: 'bor',
+  password: '123'
+}
 
-  let token = '';
+let token = '';
 
-// function send_token() {
-//   token = jwt.sign(
-//         { 
-//           login: login, 
-//           nbf: 1685096470, 
-// //          nbf: Math.floor(Date.now() / 1000) - 5 
-//         }, 'cbwbor');
+//document.cookie = "cooka=HiBro";
+//alert( 'document.cookie='+document.cookie );
 
-//      //   loginToken.submit;
-// }
-
-
-  import { enhance } from '$app/forms';
 </script>
 
+<p class='green'>{JSON.stringify(data, null, 2)}</p>
+
 <p>{data.token}</p>
+<p>{data.refreshToken}</p>
+
 <p>{Math.floor(Date.now() / 1000)}</p>
 
 <p class="title is-5">Вход</p>
