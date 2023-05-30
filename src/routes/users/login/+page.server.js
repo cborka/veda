@@ -32,7 +32,6 @@ let secret = getSecret();
 //console.log( 'document.cookie='+page.cookies);
 console.log('uuidv4()='+uuidv4());
 
-
 export async function load({cookies}) {
 
   //const unsec =cookies.get('unsec');
@@ -54,20 +53,25 @@ function getSecret(userId = 1) {
   return 'SECRET_KEY';
 }
 
-function getTokens(login = 'user') {
+function getToken(login = 'user') {
 
-  token = jwt.sign(
+  return jwt.sign(
     { 
       login: login, 
       exp: Math.floor(Date.now() / 1000) + (15),
     }, secret);
-
-    refreshToken = uuidv4();
-
-    return [token, refreshToken]
 }
 
+function getRefreshToken(login = 'user') {
 
+    let refreshToken = uuidv4();
+
+    return refreshToken;
+}
+
+function getTokens(login = 'user') {
+    return [getToken(login), getRefreshToken(login)]
+}
 //import {client} from '../../../db';
 
 // export function load() {
@@ -91,7 +95,7 @@ export const actions = {
       console.log(refreshToken);
       
       cookies.set('token', token, { path: '/', secure: false, maxAge: 60 });
-      cookies.set('refreshToken', refreshToken, { path: '/', secure: false, maxAge: 60 });
+      cookies.set('refreshToken', refreshToken, { path: '/', secure: false, maxAge: 30 });
       
       //let decoded = jwt.verify(token, 'cbwbor');
       //console.log(JSON.stringify(decoded, null, 4));

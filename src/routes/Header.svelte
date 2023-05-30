@@ -1,20 +1,25 @@
 <script>
-
   // import Menu from './Menu.svelte'; 
+
+
+
+
 </script>
 
-<header class=" container section block notification is-primary is-light">
-  <div class="content has-text-centered">
+<!-- <header class=" container section block notification is-primary is-light"> -->
+<header class="container block ">
 
-
-<!-- <h1 class="subtitle">Веда - свежие сведения обо всём!</h1> -->
-
-<div class="title is-3 ">Веда - свежие сведения обо всём!</div>
-
-<!-- <Menu></Menu> -->
-
+  <div class="content has-text-centered notification is-primary is-light">
+  <div class="title is-5 ">Веда - свежие сведения обо всём!</div>
+  <!-- <div class="subtitle is-7">Веда - свежие сведения обо всём!</div> -->
 </div>
+
+
+
+
 </header>
+
+
 
 
 <style>

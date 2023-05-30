@@ -1,6 +1,7 @@
 <script>
 // @ts-nocheck
 
+//export let data;
 
 function test(z, ...args) {
   //console.log(arguments);
@@ -11,7 +12,7 @@ function test(z, ...args) {
 // let b = Symbol('x');
 
 let S = Symbol('x');
-console.log(S);
+//console.log(S);
 
 let obj = {
   a: 1114444,
@@ -118,7 +119,8 @@ function prom() {
     .finally ( () => say('finally2') )
   }
 
-  console.log('console.log');
+  console.log('+page.svelte');
+  //console.log(JSON.stringify(data));
 </script>
 
 

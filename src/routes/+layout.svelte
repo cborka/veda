@@ -4,12 +4,18 @@
   import Menu from './Menu.svelte'; 
 	import Header from './Header.svelte';
 	import Footer from './Footer.svelte';
+	
+  //export let data;
 
 </script>
 
 
 <Menu></Menu>
-<!-- <Header /> -->
+<Header />
+
+<!-- <p>{JSON.stringify(data, undefined, 2)}</p> -->
+
+<!-- <p>{JSON.stringify(page, undefined, 2)}</p> -->
 
 <main class="container block" >
 <!-- ❄ -->  
