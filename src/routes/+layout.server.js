@@ -6,12 +6,25 @@ import {getSecret, getTokens} from '$lib/auth.js';
 
 let login = 'x';
 
-export async function load({cookies, route, url, locals }) {
+//import {LOGONSERVER, USERDNSDOMAIN, PROCESSOR_IDENTIFIER, COMPUTERNAME, USERNAME} from '$env/static/private';
+
+export async function load({cookies, route, url, locals, request }) {
 
   // console.log('url='+JSON.stringify(url, undefined, 2));
   // console.log('route='+JSON.stringify(route, undefined, 2));
   // console.log('locals ='+JSON.stringify(locals , undefined, 2));
-  
+  // console.log('USERDOMAIN ='+JSON.stringify(LOGONSERVER, undefined, 2));
+  // console.log('USERDNSDOMAIN ='+JSON.stringify(USERDNSDOMAIN, undefined, 2));
+  // console.log('USERNAME ='+JSON.stringify(USERNAME, undefined, 2));
+  // console.log('PROCESSOR_IDENTIFIER ='+JSON.stringify(PROCESSOR_IDENTIFIER, undefined, 2));
+  // console.log('COMPUTERNAME ='+JSON.stringify(COMPUTERNAME, undefined, 2));
+  // //console.log('request.headers ='+JSON.stringify(request.headers, undefined, 2));
+  console.log('request.headers.user-agent ='+request.headers.get('user-agent')   );
+  console.log('request.headers.host ='+request.headers.get('host')   );
+  console.log('request.headers.referer ='+request.headers.get('referer')   );
+  console.log('request.ip ='+request?.remoteAddress   );
+  //request.headers.forEach(console.log);
+  request.headers.get('user-agent');
 
    let refreshToken =cookies.get('refreshToken');
   let token =cookies.get('token');

@@ -10,7 +10,6 @@ import {
 
 
  console.log('DB_USER = ' + DB_USER);
- //console.log('DB_USER = ' + process.env.DB_USER);
 
 export const client = new Client({
   host: DB_HOST,
