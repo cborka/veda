@@ -155,6 +155,7 @@ export const actions = {
       
       try {
         const res = await client.query(text, values)
+        
         console.log(res.rows[0]);
         console.log('SQL='+text);
         // { id: 2, sd: 'Бухгалтерия', fio: 'Сидорова А.Н.', tel: '11-77-11' }

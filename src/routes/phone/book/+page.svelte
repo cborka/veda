@@ -277,7 +277,7 @@ function say(m) {
       <p class="title is-5">Изменение записи</p>
 
       <!-- <form class="" method="POST" action="?/save" use:enhance> -->
-      <form name="editForm" class="" method="POST" action="?/save">
+      <form name="editForm" class="" method="POST" enctype="multipart/form-data" action="?/save">
 
       <div class="field">
         <label class="label">Id

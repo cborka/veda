@@ -3,6 +3,7 @@
 import { fail, redirect } from '@sveltejs/kit';
 import jwt from  'jsonwebtoken';
 import {getSecret, getTokens} from '$lib/auth.js';
+import adapter from '@sveltejs/adapter-node';
 
 let login = 'x';
 
@@ -10,19 +11,21 @@ let login = 'x';
 
 export async function load({cookies, route, url, locals, request }) {
 
-  // console.log('url='+JSON.stringify(url, undefined, 2));
-  // console.log('route='+JSON.stringify(route, undefined, 2));
-  // console.log('locals ='+JSON.stringify(locals , undefined, 2));
-  // console.log('USERDOMAIN ='+JSON.stringify(LOGONSERVER, undefined, 2));
+  console.log('url='+JSON.stringify(url, undefined, 2));
+  console.log('route='+JSON.stringify(route, undefined, 2));
+  console.log('locals ='+JSON.stringify(locals , undefined, 2));
+  // console.log('USERDOMAIN ='+JSON.stringify(USERDOMAIN, undefined, 2));
   // console.log('USERDNSDOMAIN ='+JSON.stringify(USERDNSDOMAIN, undefined, 2));
   // console.log('USERNAME ='+JSON.stringify(USERNAME, undefined, 2));
   // console.log('PROCESSOR_IDENTIFIER ='+JSON.stringify(PROCESSOR_IDENTIFIER, undefined, 2));
   // console.log('COMPUTERNAME ='+JSON.stringify(COMPUTERNAME, undefined, 2));
-  // //console.log('request.headers ='+JSON.stringify(request.headers, undefined, 2));
-  console.log('request.headers.user-agent ='+request.headers.get('user-agent')   );
-  console.log('request.headers.host ='+request.headers.get('host')   );
-  console.log('request.headers.referer ='+request.headers.get('referer')   );
-  console.log('request.ip ='+request?.remoteAddress   );
+
+  // console.log('request.headers =='+JSON.stringify(adapter(), undefined, 2));
+  // console.log('request.headers =='+JSON.stringify(adapter().name, undefined, 2));
+  // console.log('request.headers.user-agent ='+request.headers.get('user-agent')   );
+  // console.log('request.headers.host ='+request.headers.get('host')   );
+  // console.log('request.headers.referer ='+request.headers.get('referer')   );
+  // console.log('request.ip ='+request?.remoteAddress   );
   //request.headers.forEach(console.log);
   request.headers.get('user-agent');
 
