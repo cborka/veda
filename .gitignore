@@ -5,7 +5,8 @@ node_modules
 /package
 .env
 .env.*
-.vscode
+/.vscode
 !.env.example
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+.vscode/sftp.json
