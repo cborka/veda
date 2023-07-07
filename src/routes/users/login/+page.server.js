@@ -116,7 +116,7 @@ export const actions = {
 //    get_name();
 	},
 
-  token: async ({ cookies, request }) => {
+  token: async ({ cookies, request }) =>  {
 
 		//const data = await request.formData();
     //token = data.get('token');

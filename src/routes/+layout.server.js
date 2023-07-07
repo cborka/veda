@@ -7,7 +7,7 @@ import adapter from '@sveltejs/adapter-node';
 
 let login = 'x';
 
-//import {LOGONSERVER, USERDNSDOMAIN, PROCESSOR_IDENTIFIER, COMPUTERNAME, USERNAME} from '$env/static/private';
+//import {LOGONSERVER, USERDNSDOMAIN, PROCESSOR_IDENTIFIER,  COMPUTERNAME, USERNAME} from '$env/static/private';
 
 export async function load({cookies, route, url, locals, request }) {
 
