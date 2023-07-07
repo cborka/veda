@@ -17,6 +17,8 @@ export async function handle({ event, resolve }) {
   console.log('Hook='+JSON.stringify(event.locals));
 
 
+  console.log('event.clientAddress='+event.getClientAddress()); // !!!
+  
   if (event.url.pathname.startsWith('/custom')) {
       return new Response('custom response');
   }
